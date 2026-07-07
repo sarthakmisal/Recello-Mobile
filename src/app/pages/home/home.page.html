@@ -1,0 +1,115 @@
+<div class="home-root">
+  <!-- Header -->
+  <app-header></app-header>
+
+  <!-- Skeleton while loading -->
+  <div class="skeleton-screen" *ngIf="loading">
+    <div class="skeleton sk-hero"></div>
+    <div class="sk-row">
+      <div class="skeleton sk-title"></div>
+    </div>
+    <div class="sk-cat-row">
+      <div class="skeleton sk-cat"></div>
+      <div class="skeleton sk-cat"></div>
+      <div class="skeleton sk-cat"></div>
+    </div>
+    <div class="sk-brand-row">
+      <div class="skeleton sk-chip" *ngFor="let _ of [1,2,3,4,5]"></div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <ion-content class="home-content" *ngIf="!loading" [scrollY]="true">
+
+    <!-- Hero -->
+    <section class="hero" [class.visible]="heroVisible">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+
+      <div class="badge">
+        <div class="badge-dot"></div>
+        ₹2 Crore+ Paid Out to Sellers
+      </div>
+
+      <h1 class="hero-title">Sell Your Device<br />at Best Price</h1>
+      <p class="hero-sub">Quick quotes · Free pickup · Same-day payment. India's most trusted device resale platform.
+      </p>
+
+      <div class="cta-row">
+        <button class="cta-primary" (click)="navigate('/sell/mobiles')">
+          <ion-icon name="pricetag-outline"></ion-icon>
+          Get a Quote Now
+        </button>
+        <button class="cta-icon" (click)="navigate('/orders')">
+          <ion-icon name="receipt-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-box" *ngFor="let s of stats">
+          <div class="stat-val">{{ s.val }}</div>
+          <div class="stat-lbl">{{ s.label }}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="section">
+      <div class="section-title">Sell Your Device</div>
+      <div class="cat-row">
+        <button *ngFor="let cat of categories; let i = index" class="cat-card" [class]="cat.cls"
+          [style.animation-delay]="(i * 80) + 'ms'" (click)="navigate(cat.route)">
+          <div class="cat-icon-wrap">
+            <ion-icon [name]="cat.icon"></ion-icon>
+          </div>
+          <div class="cat-label">{{ cat.label }}</div>
+          <div class="cat-desc">{{ cat.desc }}</div>
+          <div class="cat-arrow">
+            <ion-icon name="arrow-forward"></ion-icon>
+          </div>
+        </button>
+      </div>
+    </section>
+
+    <!-- Brands -->
+    <section class="section" style="margin-top: 20px;">
+      <div class="section-title">Popular Brands</div>
+      <div class="brands-scroll">
+        <div class="brand-chip" *ngFor="let b of brands">{{ b }}</div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="section" style="margin-top: 20px;">
+      <div class="section-title">How It Works</div>
+      <div class="step-card" *ngFor="let s of steps; let i = index" [style.animation-delay]="(i * 100) + 'ms'">
+        <div class="step-icon-wrap" [style.background]="s.bg">
+          <ion-icon [name]="s.icon" [style.color]="s.color"></ion-icon>
+        </div>
+        <div class="step-text">
+          <div class="step-title">{{ s.title }}</div>
+          <div class="step-desc">{{ s.desc }}</div>
+        </div>
+        <div class="step-num" [style.color]="s.color">{{ s.num }}</div>
+      </div>
+    </section>
+
+    <!-- Trust banner -->
+    <div class="trust-banner">
+      <div class="trust-item">
+        <ion-icon name="shield-checkmark-outline"></ion-icon>
+        <span>100% Secure</span>
+      </div>
+      <div class="trust-item">
+        <ion-icon name="flash-outline"></ion-icon>
+        <span>Fast Payout</span>
+      </div>
+      <div class="trust-item">
+        <ion-icon name="star-outline"></ion-icon>
+        <span>Top Rated</span>
+      </div>
+    </div>
+
+    <div class="bottom-pad"></div>
+  </ion-content>
+</div>

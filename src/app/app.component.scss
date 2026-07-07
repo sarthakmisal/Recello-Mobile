@@ -1,0 +1,232 @@
+/* ── Layout ──────────────────────────────────────────── */
+.main-wrapper {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  ion-router-outlet {
+    flex: 1;
+  }
+}
+
+/* ── Ionic menu base ─────────────────────────────────── */
+ion-menu {
+  --background: #090b12;
+  --width: min(82vw, 320px);
+}
+
+.menu-content {
+  --background: #090b12;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 0;
+  --padding-end: 0;
+}
+
+/* ── Inner drawer layout ─────────────────────────────── */
+.menu-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: max(env(safe-area-inset-top), 20px);
+  padding-bottom: max(env(safe-area-inset-bottom), 16px);
+}
+
+/* ── Menu header ─────────────────────────────────────── */
+.menu-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px 14px;
+
+  .menu-brand-mark {
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #4f7eff, #00d2b8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 17px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .menu-brand-info {
+    flex: 1;
+
+    .menu-brand-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--c-fg);
+      letter-spacing: -0.3px;
+    }
+
+    .menu-brand-sub {
+      font-size: 10px;
+      color: var(--c-muted);
+      margin-top: 1px;
+    }
+  }
+
+  .menu-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: var(--c-card);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--c-fg);
+
+    ion-icon {
+      font-size: 17px;
+    }
+  }
+}
+
+/* ── Guest card ──────────────────────────────────────── */
+.menu-guest-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 12px 10px;
+  padding: 13px;
+  border-radius: 14px;
+  background: var(--c-card);
+  border: 1px solid var(--c-border);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(79, 126, 255, 0.08),
+      rgba(0, 210, 184, 0.04)
+    );
+    pointer-events: none;
+  }
+
+  .menu-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    background: rgba(79, 126, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    ion-icon {
+      font-size: 22px;
+      color: var(--c-primary);
+    }
+  }
+
+  .menu-guest-info {
+    flex: 1;
+
+    .menu-guest-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--c-fg);
+    }
+
+    .menu-guest-sub {
+      font-size: 11px;
+      color: var(--c-muted);
+      margin-top: 2px;
+    }
+  }
+
+  .menu-login-pill {
+    padding: 7px 14px;
+    border-radius: 20px;
+    background: linear-gradient(90deg, #4f7eff, #00d2b8);
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+}
+
+/* ── Nav items ───────────────────────────────────────── */
+.menu-nav {
+  flex: 1;
+  overflow-y: auto;
+
+  .menu-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--c-border);
+    text-decoration: none;
+
+    &.nav-active .menu-nav-label {
+      color: var(--c-primary);
+    }
+
+    .menu-nav-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--c-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      ion-icon {
+        font-size: 17px;
+        color: var(--c-primary);
+      }
+
+      &.accent-icon {
+        background: rgba(255, 181, 71, 0.1);
+
+        ion-icon {
+          color: var(--c-gold);
+        }
+      }
+    }
+
+    .menu-nav-label {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--c-fg);
+    }
+
+    .menu-nav-arrow {
+      font-size: 13px;
+      color: var(--c-muted);
+    }
+  }
+
+  .menu-divider {
+    height: 1px;
+    background: var(--c-border);
+    margin: 6px 14px;
+  }
+}
+
+/* ── Version ─────────────────────────────────────────── */
+.menu-version {
+  font-size: 11px;
+  color: var(--c-muted);
+  text-align: center;
+  padding-top: 8px;
+}

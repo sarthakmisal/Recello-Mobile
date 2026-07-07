@@ -1,0 +1,137 @@
+<ion-content [fullscreen]="true" class="sell-page">
+    <section class="page-hero">
+        <div>
+            <span class="eyebrow">Sell flow</span>
+            <h1>{{ category?.label || 'Sell devices' }}</h1>
+            <p>{{ category?.description || 'A responsive, polished selling journey.' }}</p>
+        </div>
+        <div class="page-hero__chip">{{ stepLabel }}</div>
+    </section>
+
+    <section class="section" *ngIf="stepLabel && stepLabel === 'Select category brand' || true">
+        <div *ngIf="stage === 'brands'" class="section-head">
+            <h2>Choose a brand</h2>
+            <p>Select a premium card to continue.</p>
+        </div>
+        <div class="card-grid" *ngIf="stage === 'brands'">
+            <button *ngFor="let brand of brands" class="select-card" [style.--accent]="brand.tint"
+                (click)="go('/sell/' + categorySlug + '/' + brand.slug)">
+                <span>{{ brand.name | slice:0:1 }}</span>
+                <strong>{{ brand.name }}</strong>
+                <small>{{ brand.count }} models</small>
+            </button>
+        </div>
+
+        <div *ngIf="stage === 'models'" class="section-head">
+            <h2>Choose a model</h2>
+            <p>{{ brandSlug | titlecase }} devices in {{ category?.label }}</p>
+        </div>
+        <div class="card-grid compact" *ngIf="stage === 'models'">
+            <button *ngFor="let item of models" class="device-card"
+                (click)="go('/sell/' + categorySlug + '/' + brandSlug + '/' + item.slug)">
+                <div class="device-card__visual"
+                    [style.background]="'linear-gradient(135deg, ' + item.accent + '22, #fff)'">
+                    <span>{{ item.imageLabel }}</span>
+                </div>
+                <strong>{{ item.name }}</strong>
+                <p>{{ item.summary }}</p>
+                <div class="device-card__meta">From ₹{{ item.basePrice | number }}</div>
+            </button>
+        </div>
+
+        <div *ngIf="stage === 'variants'" class="section-head">
+            <h2>Pick a variant</h2>
+            <p>{{ model?.name }}</p>
+        </div>
+        <div class="variant-list" *ngIf="stage === 'variants'">
+            <button *ngFor="let item of model?.variants || []" class="variant-card"
+                (click)="go('/sell/' + categorySlug + '/' + brandSlug + '/' + modelSlug + '/' + item.slug)">
+                <strong>{{ item.label }}</strong>
+                <span>₹{{ item.basePrice | number }}</span>
+            </button>
+        </div>
+
+        <section *ngIf="stage === 'details'" class="section detail-card">
+            <div class="detail-card__visual"
+                [style.background]="'linear-gradient(135deg, ' + model?.accent + '25, #ffffff)'">
+                <span>{{ model?.imageLabel }}</span>
+            </div>
+            <div>
+                <span class="eyebrow">Variant selected</span>
+                <h2>{{ model?.name }} — {{ variant?.label }}</h2>
+                <p>{{ model?.summary }}</p>
+                <div class="pill-row">
+                    <span>Base ₹{{ variant?.basePrice | number }}</span>
+                    <span>Offer ready</span>
+                </div>
+                <ion-button color="primary"
+                    (click)="go('/sell/' + categorySlug + '/' + brandSlug + '/' + modelSlug + '/' + variantSlug + '/evaluate')">Evaluate
+                    condition</ion-button>
+            </div>
+        </section>
+
+        <section *ngIf="stage === 'evaluate'" class="section">
+            <div class="section-head">
+                <h2>Evaluate your device</h2>
+                <p>Answer a few checks and choose defects.</p>
+            </div>
+            <div class="inspect-grid">
+                <label *ngFor="let question of state.sellQuestions" class="inspect-card">
+                    <div>
+                        <strong>{{ question.label }}</strong>
+                    </div>
+                    <ion-toggle [(ngModel)]="inspection[question.key]" (ionChange)="recalculate()"></ion-toggle>
+                </label>
+            </div>
+
+            <div class="defect-grid">
+                <label
+                    *ngFor="let defect of ['broken-screen','dead-pixels','body-dents','panel-broken','battery-weak','camera-damaged']"
+                    class="chip-check">
+                    <input type="checkbox" [checked]="inspection.defects.includes(defect)"
+                        (change)="toggleDefect(defect, $any($event.target).checked)" />
+                    <span>{{ state.getDefectLabel(defect) }}</span>
+                </label>
+            </div>
+
+            <div class="value-banner">
+                <strong>Estimated offer</strong>
+                <h2>₹{{ finalOffer | number }}</h2>
+                <button
+                    (click)="go('/sell/' + categorySlug + '/' + brandSlug + '/' + modelSlug + '/' + variantSlug + '/value')">See
+                    value page</button>
+            </div>
+        </section>
+
+        <section *ngIf="stage === 'checkout'" class="section checkout-layout">
+            <div class="checkout-form">
+                <h2>Checkout</h2>
+                <label><span>Name</span><input [(ngModel)]="buyer.name" placeholder="Full name" /></label>
+                <label><span>Phone</span><input [(ngModel)]="buyer.phone" placeholder="Mobile number" /></label>
+                <label><span>Address</span><input [(ngModel)]="buyer.address" placeholder="Pickup address" /></label>
+                <div class="row">
+                    <label><span>Pincode</span><input [(ngModel)]="buyer.pincode" placeholder="400001" /></label>
+                    <label><span>Pickup date</span><input [(ngModel)]="buyer.pickup" type="date" /></label>
+                </div>
+                <ion-button color="primary" (click)="confirmOrder()">Confirm pickup</ion-button>
+            </div>
+            <aside class="summary-card">
+                <span class="eyebrow">Summary</span>
+                <h3>{{ model?.name }}</h3>
+                <p>{{ variant?.label }}</p>
+                <div class="summary-card__offer">₹{{ finalOffer | number }}</div>
+            </aside>
+        </section>
+
+        <section *ngIf="stage === 'value'" class="section value-layout">
+            <div class="value-card">
+                <span class="eyebrow">Final value</span>
+                <h2>₹{{ finalOffer | number }}</h2>
+                <p>Your quote stays clean, readable, and ready for checkout.</p>
+                <ion-button color="primary"
+                    (click)="go('/sell/' + categorySlug + '/' + brandSlug + '/' + modelSlug + '/' + variantSlug + '/checkout')">Proceed
+                    to checkout</ion-button>
+            </div>
+        </section>
+    </section>
+</ion-content>
