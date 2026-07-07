@@ -1,62 +1,91 @@
 <div class="orders-root">
-    <div class="back-header">
-        <button class="back-btn" (click)="back()" aria-label="Go back">
-            <ion-icon name="arrow-back"></ion-icon>
-        </button>
-        <div class="header-titles">
-            <div class="header-title">My Orders</div>
-            <div class="header-sub">Track your sell requests</div>
-        </div>
-        <div class="header-spacer"></div>
+  <div class="orders-topbar">
+    <button class="back-btn" (click)="back()" aria-label="Back">
+      <ion-icon name="arrow-back"></ion-icon>
+    </button>
+    <div class="topbar-info">
+      <div class="topbar-title">My Orders</div>
+      <div class="topbar-sub">Track your sell requests</div>
+    </div>
+    <button class="refresh-btn" (click)="loadOrders()" aria-label="Refresh">
+      <ion-icon name="refresh-outline"></ion-icon>
+    </button>
+  </div>
+
+  <ion-content class="orders-content" [scrollY]="true">
+
+    <!-- Loading -->
+    <div class="loading-center" *ngIf="loading">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+      <span>Loading orders…</span>
     </div>
 
-    <ion-content class="orders-content" [scrollY]="true">
-        <div class="page-pad">
+    <div *ngIf="!loading" class="orders-body">
 
-            <!-- Summary stats -->
-            <div class="summary-row">
-                <div class="summary-card" *ngFor="let s of stats">
-                    <div class="summary-icon" [style.background]="s.color + '1A'">
-                        <ion-icon [name]="s.icon" [style.color]="s.color"></ion-icon>
-                    </div>
-                    <div class="summary-val">{{ s.val }}</div>
-                    <div class="summary-lbl">{{ s.label }}</div>
-                </div>
-            </div>
-
-            <!-- Order cards -->
-            <div class="section-label">RECENT ORDERS</div>
-            <div class="order-card" *ngFor="let order of orders">
-                <div class="order-top">
-                    <div class="order-info">
-                        <div class="order-device">{{ order.device }}</div>
-                        <div class="order-id">{{ order.id }}</div>
-                    </div>
-                    <div class="status-badge" [style.background]="order.statusColor + '1A'">
-                        <span [style.color]="order.statusColor">{{ order.status }}</span>
-                    </div>
-                </div>
-                <div class="order-divider"></div>
-                <div class="order-bottom">
-                    <div class="order-meta">
-                        <ion-icon name="star-outline"></ion-icon>
-                        <span>{{ order.condition }}</span>
-                    </div>
-                    <div class="order-meta">
-                        <ion-icon name="calendar-outline"></ion-icon>
-                        <span>{{ order.date }}</span>
-                    </div>
-                    <div class="order-price">₹{{ order.price.toLocaleString('en-IN') }}</div>
-                </div>
-            </div>
-
-            <!-- CTA -->
-            <button class="grad-btn" (click)="sellAnother()" style="margin-top: 16px;">
-                <ion-icon name="add-circle-outline"></ion-icon>
-                Sell Another Device
-            </button>
-
-            <div class="bottom-pad"></div>
+      <!-- Stats row -->
+      <div class="stats-row">
+        <div class="stat-box" *ngFor="let s of stats">
+          <div class="stat-icon" [style.background]="s.color + '1A'">
+            <ion-icon [name]="s.icon" [style.color]="s.color"></ion-icon>
+          </div>
+          <div class="stat-val">{{ s.val }}</div>
+          <div class="stat-lbl">{{ s.label }}</div>
         </div>
-    </ion-content>
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty-state" *ngIf="orders.length === 0">
+        <ion-icon name="receipt-outline"></ion-icon>
+        <div class="empty-title">No orders yet</div>
+        <div class="empty-sub">Sell a device to see your orders here.</div>
+        <button class="sell-btn" (click)="sellAnother()">
+          <ion-icon name="pricetag-outline"></ion-icon>
+          Sell a Device
+        </button>
+      </div>
+
+      <!-- Orders list -->
+      <div *ngIf="orders.length > 0">
+        <div class="list-label">RECENT ORDERS</div>
+
+        <div class="order-card" *ngFor="let o of orders">
+          <div class="order-header">
+            <div class="order-icon">
+              <ion-icon name="phone-portrait-outline"></ion-icon>
+            </div>
+            <div class="order-meta">
+              <div class="order-device">{{ o.deviceName }}</div>
+              <div class="order-id">#{{ o._id.slice(-8).toUpperCase() }}</div>
+            </div>
+            <div class="status-pill" [style.background]="getStatusStyle(o.status).bg">
+              <span [style.color]="getStatusStyle(o.status).color">
+                {{ getStatusLabel(o.status) }}
+              </span>
+            </div>
+          </div>
+
+          <div class="order-divider"></div>
+
+          <div class="order-footer">
+            <div class="order-detail" *ngIf="o.pickupDate">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <span>{{ o.pickupDate | date:'dd MMM yyyy' }}</span>
+            </div>
+            <div class="order-detail" *ngIf="o.createdAt">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>{{ o.createdAt | date:'dd MMM yyyy' }}</span>
+            </div>
+            <div class="order-price">₹{{ o.offer | number }}</div>
+          </div>
+        </div>
+
+        <button class="sell-more-btn" (click)="sellAnother()">
+          <ion-icon name="add-circle-outline"></ion-icon>
+          Sell Another Device
+        </button>
+      </div>
+
+      <div class="bottom-pad"></div>
+    </div>
+  </ion-content>
 </div>

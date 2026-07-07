@@ -1,8 +1,11 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { AppStateService } from '../../services/app-state.service';
+import { CatalogService } from '../../services/catalog.service';
+import { AuthService } from '../../services/auth.service';
+import { Service } from '../../models/catalog.models';
 
 @Component({
   selector: 'app-header',
@@ -10,37 +13,49 @@ import { AppStateService } from '../../services/app-state.service';
   styleUrls: ['./header.component.scss'],
   standalone: false,
 })
-export class HeaderComponent implements OnDestroy {
+export class HeaderComponent implements OnInit, OnDestroy {
   searchOpen = false;
   searchTerm = '';
-  private sub: Subscription;
+  services: Service[] = [];
+  private subs = new Subscription();
 
-  navItems = [
+  readonly staticNav = [
     { label: 'Home', route: '/' },
-    { label: 'Mobiles', route: '/sell/mobiles' },
-    { label: 'Tablets', route: '/sell/tablets' },
-    { label: 'Laptops', route: '/sell/laptops' },
-    { label: 'Blogs', route: '/blogs' },
+    { label: 'Orders', route: '/orders' },
     { label: 'FAQ', route: '/faq' },
+    { label: 'Blog', route: '/blogs' },
   ];
 
   constructor(
     private router: Router,
     private menuCtrl: MenuController,
     private appState: AppStateService,
-  ) {
-    this.sub = this.appState.searchOpen$.subscribe((v) => {
-      this.searchOpen = v;
-    });
+    private catalog: CatalogService,
+    public auth: AuthService,
+  ) {}
+
+  ngOnInit(): void {
+    this.subs.add(
+      this.appState.searchOpen$.subscribe(v => { this.searchOpen = v; })
+    );
+    this.subs.add(
+      this.catalog.getServices().subscribe(s => {
+        this.services = s.filter(x => x.isActive !== false);
+      })
+    );
   }
 
-  toggleSearch() {
-    this.appState.toggleSearch();
+  get navItems() {
+    const serviceItems = this.services.map(s => ({
+      label: s.name,
+      route: `/sell/${s.slug}`,
+    }));
+    return [...this.staticNav.slice(0, 1), ...serviceItems, ...this.staticNav.slice(1)];
   }
 
-  openMenu() {
-    this.menuCtrl.open('main-menu');
-  }
+  toggleSearch() { this.appState.toggleSearch(); }
+
+  openMenu() { this.menuCtrl.open('main-menu'); }
 
   onSearchChange(val: string) {
     this.searchTerm = val;
@@ -52,11 +67,7 @@ export class HeaderComponent implements OnDestroy {
     this.appState.setSearchTerm('');
   }
 
-  navigateTo(route: string) {
-    this.router.navigate([route]);
-  }
+  navigateTo(route: string) { this.router.navigate([route]); }
 
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
+  ngOnDestroy() { this.subs.unsubscribe(); }
 }

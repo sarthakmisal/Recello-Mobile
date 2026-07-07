@@ -10,4 +10,4 @@ const routes: Routes = [{ path: '', component: HomePage }];
   declarations: [HomePage],
   imports: [SharedModule, ComponentsModule, RouterModule.forChild(routes)],
 })
-export class HomePageModule { }
+export class HomePageModule {}

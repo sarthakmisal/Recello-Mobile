@@ -4,70 +4,57 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    loadChildren: () =>
-      import('./pages/home/home.module').then((m) => m.HomePageModule),
+    loadChildren: () => import('./pages/home/home.module').then(m => m.HomePageModule),
   },
   {
-    path: 'sell/mobiles',
-    loadChildren: () =>
-      import('./pages/sell-mobiles/sell-mobiles.module').then(
-        (m) => m.SellMobilesPageModule,
-      ),
+    path: 'sell/:serviceSlug',
+    loadComponent: () => import('./pages/sell-flow/sell-flow.page').then(m => m.SellFlowPage),
   },
   {
-    path: 'sell/tablets',
-    loadChildren: () =>
-      import('./pages/sell-tablets/sell-tablets.module').then(
-        (m) => m.SellTabletsPageModule,
-      ),
+    path: 'sell/:serviceSlug/:brandSlug',
+    loadComponent: () => import('./pages/sell-flow/sell-flow.page').then(m => m.SellFlowPage),
   },
   {
-    path: 'sell/laptops',
-    loadChildren: () =>
-      import('./pages/sell-laptops/sell-laptops.module').then(
-        (m) => m.SellLaptopsPageModule,
-      ),
+    path: 'sell/:serviceSlug/:brandSlug/:modelSlug',
+    loadComponent: () => import('./pages/sell-flow/sell-flow.page').then(m => m.SellFlowPage),
+  },
+  {
+    path: 'sell/:serviceSlug/:brandSlug/:modelSlug/:configId',
+    loadComponent: () => import('./pages/sell-flow/sell-flow.page').then(m => m.SellFlowPage),
+  },
+  {
+    path: 'sell/:serviceSlug/:brandSlug/:modelSlug/:configId/checkout',
+    loadComponent: () => import('./pages/sell-flow/sell-flow.page').then(m => m.SellFlowPage),
   },
   {
     path: 'orders',
-    loadChildren: () =>
-      import('./pages/orders/orders.module').then((m) => m.OrdersPageModule),
+    loadChildren: () => import('./pages/orders/orders.module').then(m => m.OrdersPageModule),
   },
   {
     path: 'login',
-    loadChildren: () =>
-      import('./pages/login/login.module').then((m) => m.LoginPageModule),
+    loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule),
   },
   {
     path: 'partner',
-    loadChildren: () =>
-      import('./pages/partner/partner.module').then(
-        (m) => m.PartnerPageModule,
-      ),
+    loadChildren: () => import('./pages/partner/partner.module').then(m => m.PartnerPageModule),
   },
   {
     path: 'blogs',
-    loadChildren: () =>
-      import('./pages/blogs/blogs.module').then((m) => m.BlogsPageModule),
+    loadChildren: () => import('./pages/blogs/blogs.module').then(m => m.BlogsPageModule),
   },
   {
     path: 'faq',
-    loadChildren: () =>
-      import('./pages/faq/faq.module').then((m) => m.FaqPageModule),
+    loadChildren: () => import('./pages/faq/faq.module').then(m => m.FaqPageModule),
+  },
+  {
+    path: 'settings',
+    loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsPageModule),
   },
   { path: '**', redirectTo: '', pathMatch: 'full' },
-  {
-    path: 'blogs',
-    loadChildren: () => import('./pages/blogs/blogs.module').then( m => m.BlogsPageModule)
-  },
-  {
-    path: 'faq',
-    loadChildren: () => import('./pages/faq/faq.module').then( m => m.FaqPageModule)
-  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

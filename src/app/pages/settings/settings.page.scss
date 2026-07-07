@@ -1,0 +1,250 @@
+.settings-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--c-bg);
+}
+
+.settings-topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: max(env(safe-area-inset-top) + 10px, 16px) 16px 12px;
+  background: var(--c-card);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.back-btn {
+  width: 38px; height: 38px;
+  border-radius: 12px;
+  background: var(--c-card-alt);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--c-fg);
+  cursor: pointer;
+  flex-shrink: 0;
+  ion-icon { font-size: 20px; }
+}
+
+.topbar-info { flex: 1; }
+.topbar-title { font-size: 16px; font-weight: 700; color: var(--c-fg); letter-spacing: -0.3px; }
+
+.settings-content { --background: var(--c-bg); }
+
+.settings-body { padding: 20px 16px 0; }
+
+/* ── User card ──────────────────────────────────────────── */
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 16px;
+  background: linear-gradient(135deg, rgba(79,126,255,0.08), rgba(129,140,248,0.05));
+  border: 1px solid rgba(79,126,255,0.14);
+  border-radius: 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-xs);
+}
+
+.user-avatar {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--c-primary), #818cf8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  ion-icon { font-size: 24px; color: #fff; }
+}
+
+.user-info { flex: 1; min-width: 0; }
+.user-name { font-size: 15px; font-weight: 700; color: var(--c-fg); }
+.user-phone { font-size: 12px; color: var(--c-muted); margin-top: 2px; }
+
+.user-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(34,197,94,0.12);
+  color: #22c55e;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.guest-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--c-card);
+  border: 1px solid var(--c-border);
+  border-radius: 18px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-xs);
+
+  > ion-icon { font-size: 28px; color: var(--c-muted); flex-shrink: 0; }
+}
+
+.gb-title { font-size: 14px; font-weight: 600; color: var(--c-fg); }
+.gb-sub { font-size: 11px; color: var(--c-muted); margin-top: 2px; }
+.gb-btn {
+  margin-left: auto;
+  padding: 7px 15px;
+  border-radius: 20px;
+  background: var(--c-primary);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+/* ── Group ──────────────────────────────────────────────── */
+.settings-group {
+  background: var(--c-card);
+  border: 1px solid var(--c-border);
+  border-radius: 18px;
+  overflow: hidden;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-xs);
+}
+
+.group-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--c-muted);
+  padding: 12px 16px 6px;
+  opacity: 0.7;
+}
+
+/* ── Setting row ────────────────────────────────────────── */
+.setting-row, .nav-row {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--c-border);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s;
+  width: 100%;
+  background: transparent;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  font-family: 'Inter', sans-serif;
+
+  &:first-of-type, &:first-child { border-top: none; }
+  &:hover { background: var(--c-card-alt); }
+  &.danger-row:hover { background: rgba(239,68,68,0.04); }
+}
+
+.setting-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: var(--c-primary-tint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  ion-icon { font-size: 18px; color: var(--c-primary); }
+
+  &.theme-icon { background: rgba(255,181,71,0.12); ion-icon { color: #FFB547; } }
+  &.partner-icon { background: var(--c-teal-tint); ion-icon { color: var(--c-teal); } }
+  &.danger-icon { background: rgba(239,68,68,0.10); ion-icon { color: var(--c-danger); } }
+}
+
+.setting-text { flex: 1; min-width: 0; }
+.setting-label { font-size: 14px; font-weight: 600; color: var(--c-fg); }
+.setting-sub { font-size: 11.5px; color: var(--c-muted); margin-top: 2px; }
+.danger-text { color: var(--c-danger); }
+
+.row-arrow { font-size: 14px; color: var(--c-muted); opacity: 0.5; flex-shrink: 0; }
+
+/* ── Toggle ─────────────────────────────────────────────── */
+.toggle-btn {
+  width: 44px; height: 24px;
+  border-radius: 12px;
+  background: var(--c-border);
+  border: none;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.25s;
+  padding: 0;
+  flex-shrink: 0;
+
+  &.on { background: var(--c-primary); .toggle-knob { transform: translateX(20px); } }
+}
+
+.toggle-knob {
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.25s cubic-bezier(.4,0,.2,1);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+/* ── Theme options ──────────────────────────────────────── */
+.theme-options {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px 14px;
+  border-top: 1px solid var(--c-border);
+}
+
+.theme-opt {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 12px 8px;
+  border-radius: 12px;
+  border: 1.5px solid var(--c-border);
+  background: var(--c-card-alt);
+  color: var(--c-muted);
+  cursor: pointer;
+  transition: all 0.18s;
+  font-family: 'Inter', sans-serif;
+
+  ion-icon { font-size: 18px; }
+  span { font-size: 11.5px; font-weight: 600; }
+
+  &.active {
+    border-color: var(--c-primary);
+    background: var(--c-primary-tint);
+    color: var(--c-primary);
+  }
+}
+
+/* ── App info ───────────────────────────────────────────── */
+.app-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 20px 20px;
+  gap: 4px;
+}
+
+.app-logo {
+  width: 52px; height: 52px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--c-primary), #818cf8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.app-name { font-size: 16px; font-weight: 700; color: var(--c-fg); }
+.app-ver { font-size: 12px; color: var(--c-muted); }
+.app-tagline { font-size: 11px; color: var(--c-muted); opacity: 0.7; }

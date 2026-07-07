@@ -6,7 +6,7 @@ import { OrdersPage } from './orders.page';
 const routes: Routes = [{ path: '', component: OrdersPage }];
 
 @NgModule({
-    declarations: [OrdersPage],
-    imports: [SharedModule, RouterModule.forChild(routes)],
+  declarations: [OrdersPage],
+  imports: [SharedModule, RouterModule.forChild(routes)],
 })
-export class OrdersPageModule { }
+export class OrdersPageModule {}

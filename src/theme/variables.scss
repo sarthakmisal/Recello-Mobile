@@ -1,20 +1,94 @@
-// For information on how to create your own theme, please refer to:
-// https://ionicframework.com/docs/theming/
+/* ─────────────────────────────────────────────────────────
+   Recello Design System — Light + Dark theme
+   ───────────────────────────────────────────────────────── */
 
-:root {
-	--ion-color-primary: #7c8cff;
-	--ion-color-primary-rgb: 124, 140, 255;
-	--ion-color-primary-contrast: #06111a;
-	--ion-color-primary-contrast-rgb: 6, 17, 26;
-	--ion-color-primary-shade: #6d7be0;
-	--ion-color-primary-tint: #8c9aff;
+:root,
+[data-theme="light"] {
+  /* Brand */
+  --c-primary: #4F7EFF;
+  --c-primary-rgb: 79, 126, 255;
+  --c-primary-tint: rgba(79, 126, 255, 0.10);
+  --c-teal: #00D2B8;
+  --c-teal-tint: rgba(0, 210, 184, 0.10);
+  --c-gold: #FFB547;
+  --c-gold-tint: rgba(255, 181, 71, 0.10);
+  --c-danger: #ef4444;
+  --c-success: #22c55e;
 
-	--ion-color-secondary: #2fe0c0;
-	--ion-color-secondary-rgb: 47, 224, 192;
-	--ion-color-secondary-contrast: #06111a;
-	--ion-color-secondary-shade: #29c5ab;
-	--ion-color-secondary-tint: #46e4c6;
+  /* Surfaces */
+  --c-bg: #f4f6fb;
+  --c-bg-alt: #eef1f8;
+  --c-card: #ffffff;
+  --c-card-alt: #f0f3fa;
+  --c-surface-raised: #ffffff;
 
-	--ion-background-color: #f6f8fc;
-	--ion-text-color: #0b1220;
+  /* Text */
+  --c-fg: #0d1117;
+  --c-fg-2: #3d4554;
+  --c-muted: #7a8494;
+  --c-placeholder: #b0b8c8;
+
+  /* Borders */
+  --c-border: rgba(0, 0, 0, 0.07);
+  --c-border-strong: rgba(0, 0, 0, 0.12);
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 6px rgba(0, 0, 0, 0.07);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.10);
+
+  /* Ionic overrides */
+  --ion-background-color: #f4f6fb;
+  --ion-text-color: #0d1117;
+  --ion-color-primary: #4F7EFF;
+  --ion-color-primary-rgb: 79, 126, 255;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-shade: #4570e0;
+  --ion-color-primary-tint: #6191ff;
+  --ion-color-secondary: #00D2B8;
+  --ion-color-secondary-rgb: 0, 210, 184;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-shade: #00b9a2;
+  --ion-color-secondary-tint: #1ad7bf;
+  --ion-toolbar-background: #ffffff;
+  --ion-item-background: #ffffff;
+  --ion-card-background: #ffffff;
+}
+
+[data-theme="dark"] {
+  /* Surfaces */
+  --c-bg: #0d1117;
+  --c-bg-alt: #101419;
+  --c-card: #161b22;
+  --c-card-alt: #1c2230;
+  --c-surface-raised: #1e2432;
+
+  /* Text */
+  --c-fg: #e6edf3;
+  --c-fg-2: #9ba5b4;
+  --c-muted: #6e7a8a;
+  --c-placeholder: #4a5568;
+
+  /* Borders */
+  --c-border: rgba(255, 255, 255, 0.07);
+  --c-border-strong: rgba(255, 255, 255, 0.12);
+
+  /* Tints stay similar but darker */
+  --c-primary-tint: rgba(79, 126, 255, 0.14);
+  --c-teal-tint: rgba(0, 210, 184, 0.12);
+  --c-gold-tint: rgba(255, 181, 71, 0.12);
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 6px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.45);
+
+  /* Ionic overrides */
+  --ion-background-color: #0d1117;
+  --ion-text-color: #e6edf3;
+  --ion-toolbar-background: #161b22;
+  --ion-item-background: #161b22;
+  --ion-card-background: #161b22;
 }

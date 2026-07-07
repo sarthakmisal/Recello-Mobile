@@ -1,7 +1,5 @@
 <div class="header">
-  <!-- Main row -->
   <div class="header-row">
-    <!-- Brand -->
     <a class="brand" routerLink="/">
       <div class="brand-mark">R</div>
       <div class="brand-text">
@@ -10,34 +8,34 @@
       </div>
     </a>
 
-    <!-- Action buttons -->
     <div class="header-actions">
       <button class="icon-btn" [class.search-active]="searchOpen" (click)="toggleSearch()"
-        [attr.aria-label]="searchOpen ? 'Close search' : 'Open search'">
-        <ion-icon [name]="searchOpen ? 'close' : 'search-outline'"></ion-icon>
+        [attr.aria-label]="searchOpen ? 'Close search' : 'Search'">
+        <ion-icon [name]="searchOpen ? 'close-outline' : 'search-outline'"></ion-icon>
       </button>
-      <button class="icon-btn" (click)="openMenu()" aria-label="Open menu">
-        <ion-icon name="menu"></ion-icon>
+      <a *ngIf="auth.isLoggedIn" routerLink="/orders" class="icon-btn" aria-label="Orders">
+        <ion-icon name="receipt-outline"></ion-icon>
+      </a>
+      <button class="icon-btn" (click)="openMenu()" aria-label="Menu">
+        <ion-icon name="menu-outline"></ion-icon>
       </button>
     </div>
   </div>
 
-  <!-- Animated search bar -->
   <div class="search-wrapper" [class.open]="searchOpen">
     <div class="search-bar">
       <ion-icon name="search-outline"></ion-icon>
-      <input type="search" placeholder='Search "iPhone", "Samsung"…' [value]="searchTerm"
-        (input)="onSearchChange($any($event.target).value)" [autofocus]="searchOpen" />
-      <button *ngIf="searchTerm" class="search-clear" (click)="clearSearch()" aria-label="Clear search">
+      <input type="search" placeholder='Search brands, models…' [value]="searchTerm"
+        (input)="onSearchChange($any($event.target).value)" [autofocus]="searchOpen" autocomplete="off" />
+      <button *ngIf="searchTerm" class="search-clear" (click)="clearSearch()" aria-label="Clear">
         <ion-icon name="close-circle"></ion-icon>
       </button>
     </div>
   </div>
 
-  <!-- Quick-nav tabs -->
   <div class="quick-nav">
-    <button *ngFor="let item of navItems" class="nav-btn" (click)="navigateTo(item.route)" routerLinkActive="nav-active"
-      [routerLink]="item.route" [routerLinkActiveOptions]="{ exact: item.route === '/' }">
+    <button *ngFor="let item of navItems" class="nav-btn" [routerLink]="item.route"
+      routerLinkActive="nav-active" [routerLinkActiveOptions]="{ exact: item.route === '/' }">
       {{ item.label }}
     </button>
   </div>

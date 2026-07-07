@@ -1,0 +1,123 @@
+<div class="settings-root">
+  <div class="settings-topbar">
+    <button class="back-btn" (click)="back()" aria-label="Back">
+      <ion-icon name="arrow-back"></ion-icon>
+    </button>
+    <div class="topbar-info">
+      <div class="topbar-title">Settings</div>
+    </div>
+  </div>
+
+  <ion-content class="settings-content" [scrollY]="true">
+    <div class="settings-body">
+
+      <!-- User card -->
+      <div class="user-card" *ngIf="auth.isLoggedIn">
+        <div class="user-avatar">
+          <ion-icon name="person"></ion-icon>
+        </div>
+        <div class="user-info">
+          <div class="user-name">{{ auth.user?.name || 'User' }}</div>
+          <div class="user-phone">{{ auth.user?.phone }}</div>
+        </div>
+        <div class="user-badge">Verified</div>
+      </div>
+
+      <div class="guest-banner" *ngIf="!auth.isLoggedIn">
+        <ion-icon name="person-outline"></ion-icon>
+        <div>
+          <div class="gb-title">Not logged in</div>
+          <div class="gb-sub">Login to manage orders</div>
+        </div>
+        <a routerLink="/login" class="gb-btn">Login</a>
+      </div>
+
+      <!-- Appearance -->
+      <div class="settings-group">
+        <div class="group-label">Appearance</div>
+
+        <div class="setting-row">
+          <div class="setting-icon theme-icon">
+            <ion-icon [name]="theme.isDark ? 'moon' : 'sunny-outline'"></ion-icon>
+          </div>
+          <div class="setting-text">
+            <div class="setting-label">Theme</div>
+            <div class="setting-sub">{{ theme.isDark ? 'Dark mode active' : 'Light mode active' }}</div>
+          </div>
+          <button class="toggle-btn" [class.on]="theme.isDark" (click)="theme.toggle()">
+            <div class="toggle-knob"></div>
+          </button>
+        </div>
+
+        <div class="theme-options">
+          <button class="theme-opt" [class.active]="!theme.isDark" (click)="setTheme('light')">
+            <ion-icon name="sunny-outline"></ion-icon>
+            <span>Light</span>
+          </button>
+          <button class="theme-opt" [class.active]="theme.isDark" (click)="setTheme('dark')">
+            <ion-icon name="moon-outline"></ion-icon>
+            <span>Dark</span>
+          </button>
+          <button class="theme-opt" (click)="theme.set(prefersDark ? 'dark' : 'light')">
+            <ion-icon name="phone-portrait-outline"></ion-icon>
+            <span>System</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="settings-group">
+        <div class="group-label">Quick Links</div>
+
+        <a class="nav-row" routerLink="/orders">
+          <div class="setting-icon"><ion-icon name="receipt-outline"></ion-icon></div>
+          <div class="setting-text">
+            <div class="setting-label">My Orders</div>
+            <div class="setting-sub">Track your sell requests</div>
+          </div>
+          <ion-icon name="chevron-forward" class="row-arrow"></ion-icon>
+        </a>
+
+        <a class="nav-row" routerLink="/faq">
+          <div class="setting-icon"><ion-icon name="help-circle-outline"></ion-icon></div>
+          <div class="setting-text">
+            <div class="setting-label">FAQ</div>
+            <div class="setting-sub">Frequently asked questions</div>
+          </div>
+          <ion-icon name="chevron-forward" class="row-arrow"></ion-icon>
+        </a>
+
+        <a class="nav-row" routerLink="/partner">
+          <div class="setting-icon partner-icon"><ion-icon name="people-outline"></ion-icon></div>
+          <div class="setting-text">
+            <div class="setting-label">Become a Partner</div>
+            <div class="setting-sub">Join our merchant network</div>
+          </div>
+          <ion-icon name="chevron-forward" class="row-arrow"></ion-icon>
+        </a>
+      </div>
+
+      <!-- Account -->
+      <div class="settings-group" *ngIf="auth.isLoggedIn">
+        <div class="group-label">Account</div>
+        <button class="nav-row danger-row" (click)="logout()">
+          <div class="setting-icon danger-icon"><ion-icon name="log-out-outline"></ion-icon></div>
+          <div class="setting-text">
+            <div class="setting-label danger-text">Logout</div>
+            <div class="setting-sub">Sign out from this device</div>
+          </div>
+        </button>
+      </div>
+
+      <!-- App info -->
+      <div class="app-info">
+        <div class="app-logo">R</div>
+        <div class="app-name">Recello</div>
+        <div class="app-ver">Version {{ appVersion }}</div>
+        <div class="app-tagline">Sell smart, fast</div>
+      </div>
+
+      <div class="bottom-pad"></div>
+    </div>
+  </ion-content>
+</div>
