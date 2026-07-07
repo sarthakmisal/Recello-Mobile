@@ -1,0 +1,11 @@
+.sell-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--c-bg);
+}
+
+.sell-content {
+  --background: var(--c-bg);
+  flex: 1;
+}

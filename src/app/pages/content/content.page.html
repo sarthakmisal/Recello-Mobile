@@ -1,0 +1,31 @@
+<ion-content [fullscreen]="true" class="page-shell">
+  <section class="page-hero">
+    <span class="eyebrow">{{ page?.eyebrow || 'Recello' }}</span>
+    <h1>{{ page?.title || 'Page' }}</h1>
+    <p>{{ page?.hero || 'Responsive content page.' }}</p>
+  </section>
+
+  <section class="page-grid" *ngIf="slug !== 'blogs' && slug !== 'faq'">
+    <article class="content-card">
+      <p *ngFor="let item of page?.body || []">{{ item }}</p>
+      <ul *ngIf="page?.bullets?.length">
+        <li *ngFor="let bullet of page?.bullets">{{ bullet }}</li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="page-grid" *ngIf="slug === 'blogs'">
+    <article *ngFor="let blog of state.blogs" class="content-card blog-card">
+      <span class="tag">{{ blog.tag }}</span>
+      <h2>{{ blog.title }}</h2>
+      <p>{{ blog.desc }}</p>
+    </article>
+  </section>
+
+  <section class="page-grid faq-grid" *ngIf="slug === 'faq'">
+    <details *ngFor="let faq of state.faqs" class="content-card">
+      <summary>{{ faq.q }}</summary>
+      <p>{{ faq.a }}</p>
+    </details>
+  </section>
+</ion-content>

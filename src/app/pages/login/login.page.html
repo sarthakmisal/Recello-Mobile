@@ -1,0 +1,80 @@
+<div class="login-root">
+  <div class="top-bar">
+    <button class="back-btn" (click)="back()" aria-label="Go back">
+      <ion-icon name="arrow-back"></ion-icon>
+    </button>
+  </div>
+
+  <ion-content class="login-content" [scrollY]="true">
+    <div class="page-pad">
+
+      <!-- Brand hero -->
+      <div class="brand-hero">
+        <div class="big-mark">R</div>
+        <h1 class="welcome-title">Welcome back</h1>
+        <p class="welcome-sub">Sign in to track your orders and sell devices faster.</p>
+      </div>
+
+      <!-- Form -->
+      <div class="login-form">
+
+        <!-- Email -->
+        <div class="field-wrap">
+          <label class="field-label">Email Address</label>
+          <div class="input-row" [class.active]="email">
+            <ion-icon [name]="email ? 'mail' : 'mail-outline'" class="input-icon" [class.active]="!!email"></ion-icon>
+            <input type="email" placeholder="you@example.com" [(ngModel)]="email" autocomplete="email" />
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="field-wrap">
+          <label class="field-label">Password</label>
+          <div class="input-row" [class.active]="password">
+            <ion-icon name="lock-closed-outline" class="input-icon" [class.active]="!!password"></ion-icon>
+            <input [type]="showPass ? 'text' : 'password'" placeholder="••••••••" [(ngModel)]="password"
+              autocomplete="current-password" />
+            <button class="eye-btn" (click)="togglePass()" [attr.aria-label]="showPass ? 'Hide' : 'Show'">
+              <ion-icon [name]="showPass ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="forgot-row">
+          <button class="forgot-btn">Forgot password?</button>
+        </div>
+
+        <!-- Login CTA -->
+        <button class="login-btn" (click)="handleLogin()" [disabled]="loading">
+          <span *ngIf="!loading">Sign In <ion-icon name="arrow-forward"></ion-icon></span>
+          <span *ngIf="loading">Signing in…</span>
+        </button>
+
+        <!-- OR divider -->
+        <div class="or-row">
+          <div class="or-line"></div>
+          <span class="or-text">or continue with</span>
+          <div class="or-line"></div>
+        </div>
+
+        <!-- Social -->
+        <button class="social-btn">
+          <ion-icon name="logo-google" style="color: #EA4335;"></ion-icon>
+          Continue with Google
+        </button>
+        <button class="social-btn" style="margin-top: 10px;">
+          <ion-icon name="logo-apple"></ion-icon>
+          Continue with Apple
+        </button>
+
+        <!-- Sign up -->
+        <div class="signup-row">
+          <span>Don't have an account?</span>
+          <button class="signup-link">Sign Up Free</button>
+        </div>
+      </div>
+
+      <div class="bottom-pad"></div>
+    </div>
+  </ion-content>
+</div>

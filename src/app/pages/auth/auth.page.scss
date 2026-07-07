@@ -1,0 +1,69 @@
+.auth-shell { display:flex; align-items:center; justify-content:center; height:100%; padding:24px; }
+.auth-card { width:min(520px, 94%); background:white; border-radius:18px; padding:18px; box-shadow:0 20px 40px rgba(0,0,0,0.06); }
+.auth-card label { display:block; margin:10px 0; }
+.hint { color: #667085; font-size:13px; margin-top:12px; }
+.page-shell {
+  --padding-top: 18px;
+  --padding-bottom: 24px;
+}
+
+.auth-layout {
+  width: min(1180px, calc(100% - 24px));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: 14px;
+}
+
+.auth-copy,
+.auth-card {
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.96);
+  padding: 24px;
+  box-shadow: 0 20px 50px rgba(14, 24, 43, 0.08);
+}
+
+.eyebrow {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: rgba(124, 140, 255, 0.12);
+  color: #7c8cff;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 12px;
+}
+
+.auth-points {
+  display: grid;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.auth-points div {
+  border-radius: 18px;
+  padding: 16px;
+  background: #f5f8ff;
+}
+
+.auth-card {
+  display: grid;
+  gap: 12px;
+}
+
+.auth-card label {
+  display: grid;
+  gap: 8px;
+}
+
+.auth-card input {
+  border: 1px solid rgba(10, 18, 30, 0.1);
+  border-radius: 16px;
+  min-height: 50px;
+  padding: 0 14px;
+  outline: none;
+}
+
+@media (max-width: 900px) {
+  .auth-layout { grid-template-columns: 1fr; }
+}
