@@ -64,14 +64,14 @@ export class CatalogService {
   }
 
   getModelsForBrand(brandId: string): Observable<DeviceModel[]> {
-    return this.api.get<MaybeWrapped<DeviceModel[]>>('/catalog/models', { brandId }).pipe(
+    return this.api.get<MaybeWrapped<DeviceModel[]>>('/system/get_models', { brandId }).pipe(
       map(res => unwrap<DeviceModel>(res)),
       catchError(() => of<DeviceModel[]>([]))
     );
   }
 
   getModelConfigs(modelId: string): Observable<ModelConfig[]> {
-    return this.api.get<MaybeWrapped<ModelConfig[]>>('/catalog/configs', { modelId }).pipe(
+    return this.api.get<MaybeWrapped<ModelConfig[]>>('/sell/configs', { modelId }).pipe(
       map(res => unwrap<ModelConfig>(res)),
       catchError(() => of<ModelConfig[]>([]))
     );
