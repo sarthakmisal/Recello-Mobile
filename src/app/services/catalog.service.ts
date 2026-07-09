@@ -1,97 +1,107 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, BehaviorSubject } from 'rxjs';
-import { map, tap, catchError, shareReplay } from 'rxjs/operators';
+import { map, catchError, tap, shareReplay } from 'rxjs/operators';
 import { ApiService } from './api.service';
-import { Service, Brand, Series, DeviceModel, ModelConfig, Banner, FAQ } from '../models/catalog.models';
-
-type MaybeWrapped<T> = T | { data: T };
-
-function unwrap<T>(res: MaybeWrapped<T[]>): T[] {
-  return Array.isArray(res) ? res : ((res as { data: T[] }).data ?? []);
-}
+import {
+  ApiCategory, ApiBrand, ApiSeries, ApiModel, ApiModelDetail, ApiQuestionResponse,
+  Category, Brand, Series, DeviceModel, ModelDetail, SellQuestion
+} from '../models/catalog.models';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class CatalogService {
-  private _services = new BehaviorSubject<Service[]>([]);
-  services$ = this._services.asObservable();
-
-  private servicesCache$?: Observable<Service[]>;
+  private categoriesCache$: Observable<Category[]> | null = null;
+  private _categories = new BehaviorSubject<Category[]>([]);
+  readonly categories$ = this._categories.asObservable();
 
   constructor(private api: ApiService) {}
 
-  getServices(): Observable<Service[]> {
-    if (!this.servicesCache$) {
-      this.servicesCache$ = this.api.get<MaybeWrapped<Service[]>>('/system/get_services').pipe(
-        map(res => unwrap<Service>(res)),
-        tap(list => this._services.next(list)),
-        catchError(() => of<Service[]>([])),
+  /* ApiService already prepends environment.apiUrl — just provide the path */
+
+  /* ── Categories (/api/system/get_categories/true) ─ */
+  getCategories(): Observable<Category[]> {
+    if (!this.categoriesCache$) {
+      this.categoriesCache$ = this.api.get<ApiCategory[]>('/api/system/get_categories/true').pipe(
+        map(res => (Array.isArray(res) ? res : [])
+          .filter(c => c.status)
+          .map(c => ({ id: c.id, name: c.name, slug: c.slug, url: c.url, status: c.status }))),
+        tap(list => this._categories.next(list)),
+        catchError(() => of<Category[]>([])),
         shareReplay(1)
       );
     }
-    return this.servicesCache$;
+    return this.categoriesCache$;
   }
 
-  getServiceBySlug(slug: string): Observable<Service> {
-    return this.api.get<Service>(`/system/get_services/${slug}`);
-  }
-
-  getBrandsForService(serviceId: string): Observable<Brand[]> {
-    return this.api.get<MaybeWrapped<Brand[]>>('/system/brands', { categoryId: serviceId }).pipe(
-      map(res => unwrap<Brand>(res)),
+  /* ── Brands (/api/system/get_brands/:catSlug) ────── */
+  getBrandsByCategory(catSlug: string): Observable<Brand[]> {
+    return this.api.get<ApiBrand[]>(`/api/system/get_brands/${catSlug}`).pipe(
+      map(res => (Array.isArray(res) ? res : [])
+        .filter(b => b.status)
+        .map(b => ({
+          id: b.id, name: b.name, slug: b.slug, url: b.url,
+          seriesCount: parseInt(b.series_count ?? '0', 10)
+        }))),
       catchError(() => of<Brand[]>([]))
     );
   }
 
-  getBrands(): Observable<Brand[]> {
-    return this.api.get<MaybeWrapped<Brand[]>>('/system/get_brands').pipe(
-      map(res => unwrap<Brand>(res)),
-      catchError(() => of<Brand[]>([]))
-    );
-  }
-
-  getSeriesForBrand(brandId: string): Observable<Series[]> {
-    return this.api.get<MaybeWrapped<Series[]>>('/system/series/', { brandId }).pipe(
-      map(res => unwrap<Series>(res)),
+  /* ── Series (/api/product/brand/:brandSlug/series) ─ */
+  getSeriesByBrand(brandSlug: string): Observable<Series[]> {
+    return this.api.get<ApiSeries[]>(`/api/product/brand/${brandSlug}/series`).pipe(
+      map(res => (Array.isArray(res) ? res : []).map(s => ({ name: s.name, slug: s.slug }))),
       catchError(() => of<Series[]>([]))
     );
   }
 
-  getModelsForSeries(seriesId: string): Observable<DeviceModel[]> {
-    return this.api.get<MaybeWrapped<DeviceModel[]>>('/catalog/models', { seriesId }).pipe(
-      map(res => unwrap<DeviceModel>(res)),
+  /* ── Models (/api/product/brand/:brandSlug[/:seriesSlug]/models) */
+  getModelsByBrand(brandSlug: string, seriesSlug?: string): Observable<DeviceModel[]> {
+    const path = seriesSlug
+      ? `/api/product/brand/${brandSlug}/${seriesSlug}/models`
+      : `/api/product/brand/${brandSlug}/models`;
+    return this.api.get<ApiModel[]>(path).pipe(
+      map(res => (Array.isArray(res) ? res : []).map(m => ({ name: m.name, slug: m.slug, url: m.url }))),
       catchError(() => of<DeviceModel[]>([]))
     );
   }
 
-  getModelsForBrand(brandId: string): Observable<DeviceModel[]> {
-    return this.api.get<MaybeWrapped<DeviceModel[]>>('/system/get_models', { brandId }).pipe(
-      map(res => unwrap<DeviceModel>(res)),
-      catchError(() => of<DeviceModel[]>([]))
+  /* ── Model detail + variants (/api/product/:brandSlug/:modelSlug) */
+  getModelDetail(brandSlug: string, modelSlug: string): Observable<ModelDetail | null> {
+    return this.api.get<ApiModelDetail[]>(`/api/product/${brandSlug}/${modelSlug}`).pipe(
+      map(res => {
+        const arr = Array.isArray(res) ? res : [];
+        if (!arr.length) return null;
+        const first = arr[0];
+        return {
+          name: first.name, slug: first.slug, url: first.url,
+          variants: (first.variants ?? []).map(v => ({
+            id: v.id, name: v.name, basePrice: parseFloat(v.base_price) || 0
+          }))
+        };
+      }),
+      catchError(() => of<ModelDetail | null>(null))
     );
   }
 
-  getModelConfigs(modelId: string): Observable<ModelConfig[]> {
-    return this.api.get<MaybeWrapped<ModelConfig[]>>('/sell/configs', { modelId }).pipe(
-      map(res => unwrap<ModelConfig>(res)),
-      catchError(() => of<ModelConfig[]>([]))
+  /* ── Questions (/sell/questions/:modelSlug) ─────── */
+  getQuestions(modelSlug: string): Observable<SellQuestion[]> {
+    return this.api.get<ApiQuestionResponse[]>(`/sell/questions/${modelSlug}`).pipe(
+      map(res => {
+        const arr = Array.isArray(res) ? res : [];
+        if (!arr.length || !arr[0].questions) return [];
+        return arr[0].questions.map(q => ({
+          id: q.id, question: q.question, queType: q.que_type,
+          contextLabel: q.context_label,
+          options: (q.options ?? []).map(o => ({ id: o.id, text: o.text, deduction: o.deduction }))
+        }));
+      }),
+      catchError(() => of<SellQuestion[]>([]))
     );
   }
 
-  getModel(modelId: string): Observable<DeviceModel> {
-    return this.api.get<DeviceModel>(`/catalog/models/${modelId}`);
-  }
-
-  getActiveBanners(): Observable<Banner[]> {
-    return this.api.get<MaybeWrapped<Banner[]>>('/banners/active').pipe(
-      map(res => unwrap<Banner>(res)),
-      catchError(() => of<Banner[]>([]))
-    );
-  }
-
-  getActiveFAQs(): Observable<FAQ[]> {
-    return this.api.get<MaybeWrapped<FAQ[]>>('/cms/faqs/active').pipe(
-      map(res => unwrap<FAQ>(res)),
-      catchError(() => of<FAQ[]>([]))
-    );
+  imgUrl(url: string): string {
+    if (!url) return '';
+    if (url.startsWith('http')) return url;
+    return `${environment.imgBase}${url}`;
   }
 }
