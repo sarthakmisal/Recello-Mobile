@@ -1,36 +1,265 @@
-<ion-content [fullscreen]="true" class="rc-page">
-  <section class="hero">
-    <div class="eyebrow"><span>⚡</span> Instant mobile valuation</div>
-    <h1>Sell your old phone.<br /><span>Get more. Get paid fast.</span></h1>
-    <p>Instant quote, free doorstep pickup and secure payment.</p>
-  </section>
+<ion-content [fullscreen]="true" class="rc-page" [scrollY]="!menuOpen">
 
-  <section class="quote-card rc-card">
-    <div class="quote-head">
-      <div>
-        <span class="rc-step-label">STEP 1</span>
-        <h2 class="rc-title">Which phone are you selling?</h2>
+  <div class="announcement">
+    <span class="pulse"></span>
+    Pune pickup available today
+    <span class="separator">•</span>
+    <strong>Get ₹200 extra</strong>
+  </div>
+
+  <header class="site-header">
+    <a class="brand" href="#top">
+      <!-- <span class="brand-mark" aria-hidden="true"><span class="cycle-arrow">↻</span>R</span> -->
+      <span class="brand-copy">
+        <img [src]="logoUrl" width="100%" height="50rem" alt="">
+        <!-- <span class="brand-name">Recello</span>
+        <span class="brand-tagline">Sell smart reuse better</span> -->
+      </span>
+    </a>
+    <div class="header-actions">
+      <button class="location" type="button" aria-label="Current city">
+        <span>📍</span>
+        <span>Pune</span>
+      </button>
+      <button class="icon-button" type="button" aria-label="Open menu" (click)="toggleMenu()">☰</button>
+    </div>
+  </header>
+
+  <nav class="drawer" [class.open]="menuOpen" [attr.aria-hidden]="!menuOpen">
+    <div class="drawer-head">
+      <strong>Explore Recello</strong>
+      <button class="icon-button" aria-label="Close menu" (click)="closeMenu()">×</button>
+    </div>
+    <a href="#sell" (click)="closeMenu()">Sell a phone <span>›</span></a>
+    <a href="#how" (click)="closeMenu()">How it works <span>›</span></a>
+    <a href="#why" (click)="closeMenu()">Why Recello <span>›</span></a>
+    <a href="#reviews" (click)="closeMenu()">Customer reviews <span>›</span></a>
+    <a href="#faq" (click)="closeMenu()">FAQs <span>›</span></a>
+  </nav>
+  <div class="scrim" [class.show]="menuOpen" (click)="closeMenu()"></div>
+
+  <section class="hero" id="sell">
+    <div class="hero-copy">
+      <div class="eyebrow"><span>⚡</span> Instant mobile valuation</div>
+      <h1>Sell your old phone.<br /><span>Get more. Get paid fast.</span></h1>
+      <p>Instant quote, free doorstep pickup and secure payment across Pune.</p>
+      <div class="hero-pills">
+        <span>✓ No hidden charges</span>
+        <span>✓ Same-day pickup</span>
       </div>
     </div>
 
-    <button class="rc-search search-trigger" type="button" (click)="openQuote()">
-      <span>🔍</span>
-      <span class="flex1">Search your phone model</span>
-    </button>
+    <div class="quote-card rc-card">
+      <div class="quote-head">
+        <div>
+          <span class="rc-step-label">STEP 1 OF 3</span>
+          <h2 class="rc-title">Which phone are you selling?</h2>
+        </div>
+        <span class="secure-badge">🔒 Secure</span>
+      </div>
 
-    <div class="or"><span>or choose a brand</span></div>
-
-    <div class="brand-grid" *ngIf="!loading && !loadError">
-      <button class="brand-tile" *ngFor="let b of brands" (click)="openQuote(b.slug)">
-        <span class="brand-icon">{{ b.name.charAt(0) }}</span>
-        <span>{{ b.name }}</span>
+      <button class="rc-search search-trigger" type="button" (click)="openQuote()">
+        <span>🔍</span>
+        <span class="flex1">Search your phone model</span>
       </button>
-    </div>
 
-    <div class="rc-empty" *ngIf="loading">Loading brands…</div>
-    <div class="rc-empty" *ngIf="loadError">
-      Couldn't load brands.
-      <button class="rc-back" (click)="loadBrands()">Retry</button>
+      <div class="or"><span>or choose a brand</span></div>
+
+      <div class="brand-grid" *ngIf="!loading && !loadError">
+        <button class="brand-tile" *ngFor="let b of brands" (click)="openQuote(b.slug)">
+          <span class="brand-icon" [ngClass]="b.slug">{{ b.name.charAt(0) }}</span>
+          <span>{{ b.name }}</span>
+        </button>
+      </div>
+
+      <div class="rc-empty" *ngIf="loading">Loading brands…</div>
+      <div class="rc-empty" *ngIf="loadError">
+        Couldn't load brands.
+        <button class="rc-back" (click)="loadBrands()">Retry</button>
+      </div>
+
+      <div class="quote-proof">
+        <div class="avatar-stack" aria-hidden="true"><span>K</span><span>S</span><span>M</span></div>
+        <p><strong>4.8/5 customer rating</strong><br />Trusted by phone sellers in Pune</p>
+      </div>
     </div>
   </section>
+
+  <section class="benefit-strip" aria-label="Recello benefits">
+    <article><span class="benefit-icon">₹</span>
+      <div><strong>Best price</strong><small>Live market quote</small></div>
+    </article>
+    <article><span class="benefit-icon">⌂</span>
+      <div><strong>Free pickup</strong><small>At your doorstep</small></div>
+    </article>
+    <article><span class="benefit-icon">⚡</span>
+      <div><strong>Instant pay</strong><small>UPI or bank</small></div>
+    </article>
+  </section>
+
+  <section class="section popular">
+    <div class="section-heading">
+      <div><span class="section-kicker">QUICK SELL</span>
+        <h2>Popular phones in Pune</h2>
+      </div>
+      <button class="text-button" (click)="openQuote()">View all</button>
+    </div>
+    <div class="phone-scroller">
+      <article class="phone-card">
+        <span class="popular-badge">Popular</span>
+        <div class="phone-visual iphone"><span></span><i></i><b></b></div>
+        <h3>iPhone 15</h3>
+        <p>Get up to</p><strong>₹46,500</strong>
+        <button (click)="openQuote()">Check price</button>
+      </article>
+      <article class="phone-card">
+        <div class="phone-visual galaxy"><span></span><i></i><b></b></div>
+        <h3>Galaxy S24 Ultra</h3>
+        <p>Get up to</p><strong>₹58,000</strong>
+        <button (click)="openQuote()">Check price</button>
+      </article>
+      <article class="phone-card">
+        <div class="phone-visual oneplus-phone"><span></span><i></i><b></b></div>
+        <h3>OnePlus 12</h3>
+        <p>Get up to</p><strong>₹34,000</strong>
+        <button (click)="openQuote()">Check price</button>
+      </article>
+    </div>
+    <p class="price-note">*Indicative maximum prices. Final value depends on variant and device condition.</p>
+  </section>
+
+  <section class="offer-banner">
+    <div>
+      <span class="offer-chip">LIMITED PUNE OFFER</span>
+      <h2>Get ₹200 extra on your first sale</h2>
+      <p>Use code <strong>HELLO200</strong> during pickup.</p>
+      <button type="button" class="light-cta" (click)="claimOffer()">{{ offerCopied ? 'Code copied!' : 'Claim offer'
+        }}</button>
+    </div>
+    <div class="coin-art" aria-hidden="true"><span>₹</span><i>₹</i><b>₹</b></div>
+  </section>
+
+  <section class="section" id="how">
+    <div class="section-heading simple">
+      <div><span class="section-kicker">SIMPLE &amp; FAST</span>
+        <h2>Sell in 3 easy steps</h2>
+      </div>
+    </div>
+    <div class="steps">
+      <article><span class="step-num">1</span>
+        <div class="step-art">⌕</div>
+        <h3>Select your phone</h3>
+        <p>Choose the exact model and variant.</p>
+      </article>
+      <div class="step-line"></div>
+      <article><span class="step-num">2</span>
+        <div class="step-art">₹</div>
+        <h3>Get an instant quote</h3>
+        <p>Answer a few simple condition questions.</p>
+      </article>
+      <div class="step-line"></div>
+      <article><span class="step-num">3</span>
+        <div class="step-art">⌂</div>
+        <h3>Pickup &amp; payment</h3>
+        <p>We verify, collect and pay instantly.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="why" id="why">
+    <div class="why-copy">
+      <span class="section-kicker light">WHY RECELLO</span>
+      <h2>Built for a better selling experience</h2>
+      <p>Clear pricing, trained pickup experts and no last-minute surprises.</p>
+    </div>
+    <div class="why-grid">
+      <article><span>₹</span><strong>Fair valuation</strong>
+        <p>Live Pune resale prices.</p>
+      </article>
+      <article><span>✓</span><strong>Transparent checks</strong>
+        <p>See every price adjustment.</p>
+      </article>
+      <article><span>⚡</span><strong>Fast service</strong>
+        <p>Same-day slots available.</p>
+      </article>
+      <article><span>♻</span><strong>Responsible reuse</strong>
+        <p>Extend your device lifecycle.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section reviews" id="reviews">
+    <div class="section-heading">
+      <div><span class="section-kicker">CUSTOMER LOVE</span>
+        <h2>Pune sells smarter</h2>
+      </div>
+      <span class="rating-pill">★ 4.8</span>
+    </div>
+    <div class="review-scroller">
+      <article>
+        <div class="stars">★★★★★</div>
+        <p>"The quote was clear and the pickup executive paid immediately. Much smoother than I expected."</p>
+        <footer><span>AT</span>
+          <div><strong>Aditya T.</strong><small>Baner, Pune</small></div>
+        </footer>
+      </article>
+      <article>
+        <div class="stars">★★★★★</div>
+        <p>"Sold my iPhone in under one hour. The final amount matched the condition I selected online."</p>
+        <footer><span>NK</span>
+          <div><strong>Neha K.</strong><small>Wakad, Pune</small></div>
+        </footer>
+      </article>
+    </div>
+  </section>
+
+  <section class="section faq" id="faq">
+    <div class="section-heading simple">
+      <div><span class="section-kicker">NEED HELP?</span>
+        <h2>Frequently asked questions</h2>
+      </div>
+    </div>
+    <details>
+      <summary>How is my phone price calculated?<span>+</span></summary>
+      <p>Your quote is based on model, storage, age, physical condition, screen, functionality, warranty and current
+        resale demand.</p>
+    </details>
+    <details>
+      <summary>Is doorstep pickup free?<span>+</span></summary>
+      <p>Yes. Recello doorstep inspection and pickup are free in currently supported Pune locations.</p>
+    </details>
+    <details>
+      <summary>When will I receive payment?<span>+</span></summary>
+      <p>Payment is initiated after the pickup expert completes device verification and you accept the final price.</p>
+    </details>
+  </section>
+
+  <section class="final-cta">
+    <div class="final-phone" aria-hidden="true"><span></span><i></i></div>
+    <div>
+      <span class="section-kicker light">READY TO SELL?</span>
+      <h2>Your old phone is worth more than sitting in a drawer.</h2>
+      <button class="yellow-cta" (click)="openQuote()">Get instant quote</button>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <a class="brand footer-brand" href="#top">
+      <span class="brand-copy">
+        <img [src]="logoUrl" width="100%" height="50rem" alt="">
+      </span>
+      <!-- <span class="brand-mark"><span class="cycle-arrow">↻</span>R</span>
+      <span class="brand-copy"><span class="brand-name">Recello</span><span class="brand-tagline">Sell smart reuse better</span></span> -->
+    </a>
+    <p>Pune's customer-first platform for selling used phones.</p>
+    <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">E-waste</a><a href="#">Support</a>
+    </div>
+    <small>© 2026 Recello. All rights reserved.</small>
+  </footer>
+
+  <div class="sticky-sell">
+    <div><small>Sell your phone</small><strong>Get instant price</strong></div>
+    <button (click)="openQuote()">Start now <span>→</span></button>
+  </div>
+
 </ion-content>

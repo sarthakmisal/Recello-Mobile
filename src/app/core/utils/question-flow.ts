@@ -69,6 +69,6 @@ export class QuestionFlow {
   }
 
   getAnswers(): QuestionAnswer[] {
-    return Array.from(this.answers.entries()).map(([question_id, option_ids]) => ({ question_id, option_ids }));
+    return Array.from(this.answers.entries()).map(([question_id, options]) => ({ question_id, options }));
   }
 }

@@ -4,14 +4,27 @@ import { CatalogService } from '../../../../core/services/catalog.service';
 import { SellService } from '../../../../core/services/sell.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Brand, DeviceModel, SellOption, SellQuestion, Variant } from '../../../../core/models/catalog.models';
-import { Address, Listing, PickupSlot, PriceCalculation } from '../../../../core/models/sell-flow.models';
+import { Address, Listing, PriceCalculation } from '../../../../core/models/sell-flow.models';
 import { QuestionFlow } from '../../../../core/utils/question-flow';
 import { LoginModalComponent } from '../../../../core/components/login-modal/login-modal.component';
 
 type Step =
   | 'brand' | 'model' | 'variant' | 'estimate'
-  | 'login-phone' | 'login-otp'
   | 'questions' | 'final' | 'pickup' | 'new-address' | 'success';
+
+/** Fixed category slug for this flow — every listing created here is a phone. */
+const CATEGORY_SLUG = 'sell-mobiles';
+
+interface PickupDate {
+  date: string;   // yyyy-mm-dd
+  label: string;  // e.g. "Today", "Tomorrow", "Wed, 16 Jul"
+}
+
+interface TimeWindow {
+  start: string; // "10:00"
+  end: string;   // "13:00"
+  label: string; // "10 AM - 1 PM"
+}
 
 @Component({
   selector: 'rc-sell-quote-modal',
@@ -40,13 +53,10 @@ export class SellQuoteModalComponent implements OnInit {
   variants: Variant[] = [];
   selectedVariant: Variant | null = null;
 
-  // auth
-  phone = '';
-  otp = '';
-  requestId: string | null = null;
-
   // questions
   private flow: QuestionFlow | null = null;
+  /** Flat list of every question for this model — needed to compute the price later. */
+  private questionList: SellQuestion[] = [];
   currentQuestion: SellQuestion | null = null;
   selectedOptionIds: number[] = [];
 
@@ -57,9 +67,17 @@ export class SellQuoteModalComponent implements OnInit {
   // pickup
   addresses: Address[] = [];
   selectedAddress: Address | null = null;
-  slots: PickupSlot[] = [];
-  selectedSlot: PickupSlot | null = null;
-  newAddress = { line1: '', city: '', pincode: '', phone: '' };
+  dates: PickupDate[] = [];
+  selectedDate: PickupDate | null = null;
+  timeWindows: TimeWindow[] = [
+    { start: '10:00', end: '13:00', label: '10 AM – 1 PM' },
+    { start: '14:00', end: '17:00', label: '2 PM – 5 PM' },
+    { start: '17:00', end: '20:00', label: '5 PM – 8 PM' }
+  ];
+  selectedWindow: TimeWindow | null = null;
+  pickupNotes = '';
+
+  newAddress = { name: '', phone: '', line1: '', line2: '', city: '', state: '', pincode: '', country: 'India', is_default: false };
 
   constructor(
     private modalCtrl: ModalController,
@@ -69,7 +87,7 @@ export class SellQuoteModalComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.slots = this.buildSlots();
+    this.dates = this.buildDates();
     if (this.initialBrandSlug) {
       this.loading = true;
       this.catalog.getBrands().subscribe({
@@ -100,8 +118,6 @@ export class SellQuoteModalComponent implements OnInit {
       case 'model': this.step = 'brand'; break;
       case 'variant': this.step = 'model'; break;
       case 'estimate': this.step = 'variant'; break;
-      case 'login-phone': this.step = 'estimate'; break;
-      case 'login-otp': this.step = 'login-phone'; break;
       case 'questions': this.backQuestion(); break;
       case 'pickup': this.step = 'final'; break;
       case 'new-address': this.step = 'pickup'; break;
@@ -168,7 +184,7 @@ export class SellQuoteModalComponent implements OnInit {
     this.loading = true;
     this.errorMsg = null;
     this.catalog.getModelDetail(this.selectedBrand.slug, this.selectedModel.slug).subscribe({
-      next: (detail) => { this.variants = detail.variants; console.log(detail); this.loading = false; },
+      next: (detail) => { this.variants = detail.variants; this.loading = false; },
       error: () => { this.loading = false; this.errorMsg = 'Could not load storage variants.'; }
     });
   }
@@ -188,32 +204,6 @@ export class SellQuoteModalComponent implements OnInit {
     if (res?.data?.success) this.startQuestions();
   }
 
-  /* ── Login ──────────────────────────────────────────────────── */
-
-  sendOtp(): void {
-    if (this.phone.trim().length < 10) { this.errorMsg = 'Enter a valid 10-digit phone number.'; return; }
-    this.loading = true; this.errorMsg = null;
-    this.auth.requestOtp(this.phone.trim()).subscribe({
-      next: (r) => { this.requestId = r.id; this.loading = false; this.step = 'login-otp'; },
-      error: () => { this.loading = false; this.errorMsg = 'Could not send OTP. Try again.'; }
-    });
-  }
-
-  resendOtp(): void {
-    if (!this.requestId) { this.showToast('No request to resend'); return; }
-    this.auth.resendOtp(this.requestId, this.phone.trim()).subscribe({ next: (r) => { this.requestId = r.id; this.showToast('OTP resent'); } });
-  }
-
-  verifyOtp(): void {
-    if (!this.requestId) { this.errorMsg = 'No OTP request found.'; return; }
-    if (this.otp.trim().length < 4) { this.errorMsg = 'Enter the OTP you received.'; return; }
-    this.loading = true; this.errorMsg = null;
-    this.auth.verifyOtp(this.requestId, this.otp.trim()).subscribe({
-      next: () => { this.loading = false; this.startQuestions(); },
-      error: () => { this.loading = false; this.errorMsg = 'Incorrect OTP. Try again.'; }
-    });
-  }
-
   /* ── Questions ──────────────────────────────────────────────── */
   startQuestions(): void {
     if (!this.selectedModel) return;
@@ -222,6 +212,7 @@ export class SellQuoteModalComponent implements OnInit {
     this.sell.getQuestionsByModel(this.selectedModel.slug).subscribe({
       next: (questions) => {
         this.loading = false;
+        this.questionList = questions;
         if (!questions.length) { this.finishQuestions(); return; }
         this.flow = new QuestionFlow(questions);
         this.step = 'questions';
@@ -242,7 +233,7 @@ export class SellQuoteModalComponent implements OnInit {
 
   chooseOption(opt: SellOption): void {
     if (!this.currentQuestion) return;
-    if (this.currentQuestion.que_type === 'single_select') {
+    if (this.currentQuestion.que_type === 'single_select' || this.currentQuestion.que_type === 'yes_no') {
       this.selectedOptionIds = [opt.id];
       this.submitAnswer();
     } else {
@@ -265,17 +256,16 @@ export class SellQuoteModalComponent implements OnInit {
 
   /* ── Final price ────────────────────────────────────────────── */
   private finishQuestions(): void {
-    if (!this.selectedModel || !this.selectedVariant) return;
-    this.loading = true;
+    if (!this.selectedVariant) return;
     this.errorMsg = null;
-    this.sell.calculatePrice({
-      model_slug: this.selectedModel.slug,
-      variant_id: this.selectedVariant.id,
-      answers: this.flow?.getAnswers() ?? []
-    }).subscribe({
-      next: (calc) => { this.priceCalc = calc; this.loading = false; this.step = 'final'; },
-      error: () => { this.loading = false; this.errorMsg = 'Could not calculate the final price.'; }
-    });
+    // There is no calculate-price endpoint — the deduction % on each chosen
+    // option is applied to the variant's base price right here.
+    this.priceCalc = this.sell.computePrice(
+      this.selectedVariant.base_price,
+      this.questionList,
+      this.flow?.getAnswers() ?? []
+    );
+    this.step = 'final';
   }
 
   /* ── Listing + pickup ───────────────────────────────────────── */
@@ -284,14 +274,12 @@ export class SellQuoteModalComponent implements OnInit {
     this.loading = true;
     this.errorMsg = null;
     this.sell.createListing({
+      category_slug: CATEGORY_SLUG,
+      brand_slug: this.selectedBrand.slug,
       model_slug: this.selectedModel.slug,
-      variant_id: this.selectedVariant.id,
-      brand: this.selectedBrand.name,
-      model: this.selectedModel.name,
-      variant: this.selectedVariant.name,
-      base_price: this.priceCalc.basePrice,
-      final_price: this.priceCalc.finalPrice,
-      answers: this.flow?.getAnswers() ?? []
+      config_id: Number(this.selectedVariant.id),
+      answers: this.flow?.getAnswers() ?? [],
+      expected_price: this.priceCalc.finalPrice
     }).subscribe({
       next: (listing) => { this.listing = listing; this.loading = false; this.step = 'pickup'; this.loadAddresses(); },
       error: () => { this.loading = false; this.errorMsg = 'Could not create your listing.'; }
@@ -303,7 +291,7 @@ export class SellQuoteModalComponent implements OnInit {
     this.sell.getAddresses().subscribe({
       next: (list) => {
         this.addresses = list;
-        this.selectedAddress = list.find((a) => a.isDefault) ?? list[0] ?? null;
+        this.selectedAddress = list.find((a) => a.is_default) ?? list[0] ?? null;
         this.loading = false;
       },
       error: () => { this.loading = false; this.addresses = []; }
@@ -314,22 +302,37 @@ export class SellQuoteModalComponent implements OnInit {
     this.selectedAddress = addr;
   }
 
-  selectSlot(slot: PickupSlot): void {
-    this.selectedSlot = slot;
+  selectDate(date: PickupDate): void {
+    this.selectedDate = date;
+  }
+
+  selectWindow(win: TimeWindow): void {
+    this.selectedWindow = win;
   }
 
   openNewAddress(): void {
-    this.newAddress = { line1: '', city: '', pincode: '', phone: '' };
+    this.newAddress = { name: '', phone: '', line1: '', line2: '', city: '', state: '', pincode: '', country: 'India', is_default: this.addresses.length === 0 };
     this.step = 'new-address';
   }
 
   saveNewAddress(): void {
-    if (!this.newAddress.line1 || !this.newAddress.city || !this.newAddress.pincode) {
-      this.errorMsg = 'Fill in address line, city and pincode.'; return;
+    const a = this.newAddress;
+    if (!a.name || !a.phone || !a.line1 || !a.city || !a.state || !a.pincode) {
+      this.errorMsg = 'Fill in name, phone, address line, city, state and pincode.'; return;
     }
     this.loading = true;
     this.errorMsg = null;
-    this.sell.addAddress(this.newAddress).subscribe({
+    this.sell.addAddress({
+      name: a.name.trim(),
+      phone: a.phone.trim(),
+      line1: a.line1.trim(),
+      line2: a.line2?.trim() || undefined,
+      city: a.city.trim(),
+      state: a.state.trim(),
+      pincode: a.pincode.trim(),
+      country: a.country?.trim() || 'India',
+      is_default: a.is_default
+    }).subscribe({
       next: (addr) => {
         this.addresses = [addr, ...this.addresses];
         this.selectedAddress = addr;
@@ -341,25 +344,27 @@ export class SellQuoteModalComponent implements OnInit {
   }
 
   confirmPickup(): void {
-    if (!this.listing || !this.selectedAddress || !this.selectedSlot) {
-      this.errorMsg = 'Pick an address and a slot to continue.'; return;
+    if (!this.listing || !this.selectedAddress || !this.selectedDate || !this.selectedWindow) {
+      this.errorMsg = 'Pick an address, date and time slot to continue.'; return;
     }
     this.loading = true;
     this.errorMsg = null;
     this.sell.schedulePickup({
-      listing_id: this.listing._id,
+      listing_id: this.listing.id,
       address_id: this.selectedAddress.id,
-      pickup_date: this.selectedSlot.date,
-      pickup_slot: this.selectedSlot.label
+      pickup_date: this.selectedDate.date,
+      pickup_slot_start: this.selectedWindow.start,
+      pickup_slot_end: this.selectedWindow.end,
+      notes: this.pickupNotes.trim() || undefined
     }).subscribe({
       next: () => { this.loading = false; this.step = 'success'; },
       error: () => { this.loading = false; this.errorMsg = 'Could not schedule pickup. Try again.'; }
     });
   }
 
-  private buildSlots(): PickupSlot[] {
+  private buildDates(): PickupDate[] {
     const names = ['Today', 'Tomorrow'];
-    const out: PickupSlot[] = [];
+    const out: PickupDate[] = [];
     for (let i = 0; i < 5; i++) {
       const d = new Date();
       d.setDate(d.getDate() + i);

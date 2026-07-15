@@ -1,5 +1,6 @@
 /* Recello shared UI classes — pure CSS, no framework overhead.
    Ported from recello_mobile_demo_single_file.html so every screen matches. */
+@import "bootstrap/scss/bootstrap";
 
 .rc-card {
   background: var(--rc-surface);
@@ -20,6 +21,7 @@
   letter-spacing: -0.45px;
   margin: 5px 0 14px;
   font-weight: 800;
+  color: #2a2020 ;
 }
 
 .rc-subtle {

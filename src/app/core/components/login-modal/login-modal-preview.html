@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Login modal — premium redesign preview</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root {
+    --rc-green-900: #062a1e;
+    --rc-green-800: #087a55;
+    --rc-green-600: #10a374;
+    --rc-mint-050: #eefbf4;
+    --rc-yellow: #ffd335;
+    --rc-yellow-600: #f2b705;
+    --rc-ink: #0d211a;
+    --rc-muted: #64766f;
+    --rc-line: #dfe8e3;
+    --rc-danger: #e2453f;
+    --rc-danger-bg: #fdecea;
+    --rc-shadow: 8, 122, 85;
+    --rc-font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+    --rc-font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: #eef2ef;
+    font-family: var(--rc-font-body);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px 60px;
+  }
+
+  .rig { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 26px; }
+  .rig-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .rig-label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: #8b9a93; text-transform: uppercase; }
+  .rig button {
+    font-family: var(--rc-font-body); font-size: 12px; font-weight: 600; padding: 8px 14px; border-radius: 99px;
+    border: 1.5px solid var(--rc-line); background: #fff; color: var(--rc-ink); cursor: pointer; transition: all 0.15s ease;
+  }
+  .rig button:hover { border-color: var(--rc-green-800); color: var(--rc-green-800); }
+  .rig button.active { background: var(--rc-green-800); border-color: var(--rc-green-800); color: #fff; }
+
+  /* ---- device frames ---- */
+  .stage { width: 100%; display: flex; justify-content: center; }
+
+  .phone-frame {
+    width: 375px; border-radius: 40px; background: #0a0f0d; padding: 12px; box-shadow: 0 30px 60px rgba(6,20,15,0.35);
+  }
+  .phone-screen { background: #f5f9f7; border-radius: 30px; overflow: hidden; position: relative; min-height: 660px; display: flex; flex-direction: column; justify-content: flex-end; }
+  .phone-notch { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 90px; height: 22px; border-radius: 14px; background: #0a0f0d; z-index: 5; }
+
+  .browser-frame {
+    width: 100%; max-width: 1180px; border-radius: 14px; background: #d7ddd9; padding: 10px 10px 0; box-shadow: 0 30px 60px rgba(6,20,15,0.18);
+  }
+  .browser-bar { display: flex; align-items: center; gap: 6px; padding: 0 6px 10px; }
+  .browser-bar span { width: 10px; height: 10px; border-radius: 50%; background: #b7bfba; }
+  .browser-screen { background: #f5f9f7; border-radius: 8px 8px 0 0; min-height: 560px; display: flex; align-items: stretch; overflow: hidden; }
+
+  /* ---- component (identical to production files) ---- */
+  .rc-login-modal { --background: #f5f9f7; width: 100%; font-family: var(--rc-font-body); }
+
+  @media (min-width: 640px) {
+    .rc-login-modal { display: flex; align-items: center; justify-content: center; min-height: 100%; padding: 0 16px; }
+  }
+
+  .rc-shell {
+    position: relative; width: 100%; max-width: 460px; margin: 0 auto;
+    padding: 14px 20px 20px;
+    background:
+      radial-gradient(120% 90% at 12% -12%, rgba(255,211,53,0.30) 0%, rgba(255,211,53,0) 46%),
+      radial-gradient(120% 90% at 112% 6%, rgba(8,122,85,0.20) 0%, rgba(8,122,85,0) 42%),
+      linear-gradient(180deg, #f4faf7 0%, #ffffff 60%);
+    border-radius: 26px 26px 0 0;
+  }
+
+  @media (min-width: 640px) {
+    .rc-shell { margin: 24px auto; padding: 30px 34px 34px; border-radius: 26px; border: 1px solid var(--rc-line); box-shadow: 0 30px 60px rgba(6,20,15,0.14), 0 4px 18px rgba(6,20,15,0.06); }
+    .sheet-handle { display: none; }
+  }
+
+  .sheet-handle {
+    width: 40px; height: 4px; border-radius: 99px;
+    background: linear-gradient(90deg, var(--rc-line), var(--rc-green-600), var(--rc-line));
+    background-size: 200% 100%; margin: 2px auto 16px; animation: rc-handle-sheen 5s ease-in-out infinite;
+  }
+
+  .header { position: relative; margin-bottom: 18px; animation: rc-rise 0.5s cubic-bezier(0.16,1,0.3,1) both; }
+  .rc-eyebrow { display: flex; align-items: center; gap: 6px; }
+  .rc-live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rc-green-600); box-shadow: 0 0 0 3px rgba(var(--rc-shadow),0.16); animation: rc-pulse 2.4s ease-in-out infinite; flex: none; }
+  .rc-step-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--rc-green-800); }
+  .header h2 { font-family: var(--rc-font-display); font-size: clamp(19px, 4.4vw, 22px); font-weight: 700; letter-spacing: -0.5px; margin: 7px 0 0; color: var(--rc-ink); padding-right: 40px; }
+
+  .close {
+    position: absolute; top: -4px; right: -2px; border: 0; display: grid; place-items: center; background: #fff;
+    width: 34px; height: 34px; border-radius: 11px; color: var(--rc-ink);
+    box-shadow: 0 1px 2px rgba(16,35,28,0.06), 0 6px 16px rgba(16,35,28,0.08); transition: transform 0.18s ease, color 0.18s ease; cursor: pointer;
+  }
+  .close:hover { color: var(--rc-danger); transform: rotate(90deg); }
+
+  .rc-route { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; margin: 0 0 22px; animation: rc-rise 0.5s 0.05s cubic-bezier(0.16,1,0.3,1) both; }
+  .rc-route-node { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .rc-route-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--rc-green-800); box-shadow: 0 0 0 4px var(--rc-mint-050); transition: background 0.4s ease, box-shadow 0.4s ease; }
+  .rc-route-node--end .rc-route-dot { background: #fff; border: 2px solid var(--rc-line); box-shadow: none; }
+  .rc-route-label { font-size: 10px; font-weight: 600; color: var(--rc-muted); letter-spacing: 0.02em; white-space: nowrap; }
+  .rc-route-node:first-child .rc-route-label { color: var(--rc-green-800); }
+  .rc-route-track { position: relative; height: 2px; border-radius: 2px; background: var(--rc-line); min-width: 32px; }
+  .rc-route-fill { position: absolute; inset: 0; width: 0%; border-radius: 2px; background: linear-gradient(90deg, var(--rc-green-800), var(--rc-green-600)); transition: width 0.55s cubic-bezier(0.65,0,0.35,1); }
+  .rc-route-puck { position: absolute; top: 50%; left: 0%; width: 10px; height: 10px; border-radius: 50%; background: var(--rc-yellow); box-shadow: 0 0 0 3px #fff, 0 2px 6px rgba(var(--rc-shadow),0.35); transform: translate(-50%,-50%); transition: left 0.55s cubic-bezier(0.65,0,0.35,1); }
+  .rc-route.at-otp .rc-route-fill { width: 100%; }
+  .rc-route.at-otp .rc-route-puck { left: 100%; }
+  .rc-route.at-otp .rc-route-node--end .rc-route-dot { background: var(--rc-green-800); border-color: var(--rc-green-800); box-shadow: 0 0 0 4px var(--rc-mint-050); }
+  .rc-route.at-otp .rc-route-node--end .rc-route-label { color: var(--rc-green-800); }
+
+  .body { animation: rc-rise 0.5s 0.1s cubic-bezier(0.16,1,0.3,1) both; }
+  .rc-panel { display: flex; flex-direction: column; }
+  .rc-field { position: relative; }
+  .rc-input {
+    width: 100%; height: 50px; border: 1.5px solid var(--rc-line); border-radius: 14px; padding: 0 16px;
+    font-family: var(--rc-font-body); font-size: 16px; font-weight: 500; color: var(--rc-ink); background: #fff;
+    margin-bottom: 12px; transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+  .rc-input::placeholder { color: #a2ada7; font-weight: 400; }
+  .rc-input:focus { outline: none; border-color: var(--rc-green-800); box-shadow: 0 0 0 4px rgba(var(--rc-shadow),0.12); }
+  .rc-input[disabled] { background: #f5f8f6; color: var(--rc-muted); }
+  .rc-phone-field { display: flex; align-items: center; }
+  .rc-phone-code { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 15px; font-weight: 600; color: var(--rc-ink); padding-right: 10px; border-right: 1.5px solid var(--rc-line); pointer-events: none; }
+  .rc-phone-input { padding-left: 56px; letter-spacing: 0.5px; }
+  .new-user { animation: rc-rise 0.4s cubic-bezier(0.16,1,0.3,1) both; }
+  .new-user p { font-size: 12px; color: var(--rc-muted); margin: 2px 0 10px; line-height: 1.5; }
+  .rc-subtle { font-size: 12px; color: var(--rc-muted); margin: 0 0 14px; line-height: 1.5; }
+  .rc-subtle strong { color: var(--rc-ink); font-weight: 700; }
+
+  .rc-otp-wrap { position: relative; height: 56px; margin-bottom: 14px; }
+  .rc-otp-input { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; border: 0; margin: 0; padding: 0; background: transparent; color: transparent; caret-color: transparent; font-size: 16px; }
+  .rc-otp-input:focus { outline: none; }
+  .rc-otp-boxes { position: absolute; inset: 0; z-index: 1; display: grid; grid-template-columns: repeat(6,1fr); gap: 8px; pointer-events: none; }
+  .rc-otp-box {
+    display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--rc-line); border-radius: 12px;
+    background: #fff; font-family: var(--rc-font-display); font-variant-numeric: tabular-nums; font-size: 20px; font-weight: 600;
+    color: var(--rc-ink); transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  }
+  .rc-otp-box.is-filled { border-color: var(--rc-green-800); background: var(--rc-mint-050); }
+  .rc-otp-wrap.is-focused .rc-otp-box.is-active { border-color: var(--rc-green-800); box-shadow: 0 0 0 3px rgba(var(--rc-shadow),0.14); }
+  .rc-otp-wrap.is-focused .rc-otp-box.is-active::after { content: ''; width: 2px; height: 22px; background: var(--rc-green-800); animation: rc-caret-blink 1s step-end infinite; }
+
+  .rc-btn-primary {
+    position: relative; width: 100%; height: 50px; border: 0; border-radius: 14px; font-family: var(--rc-font-body);
+    font-size: 13px; font-weight: 700; letter-spacing: 0.01em; color: var(--rc-green-900);
+    background: linear-gradient(180deg, var(--rc-yellow) 0%, var(--rc-yellow-600) 100%);
+    box-shadow: 0 12px 24px rgba(var(--rc-shadow),0.18), inset 0 1px 0 rgba(255,255,255,0.6);
+    overflow: hidden; display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease; cursor: pointer; margin-top: 6px;
+  }
+  .rc-btn-primary::after { content: ''; position: absolute; top: 0; left: -60%; width: 40%; height: 100%; background: linear-gradient(115deg, transparent, rgba(255,255,255,0.55), transparent); transform: skewX(-18deg); }
+  .rc-btn-primary:not([disabled]):hover { transform: translateY(-1px); box-shadow: 0 16px 28px rgba(var(--rc-shadow),0.24), inset 0 1px 0 rgba(255,255,255,0.6); }
+  .rc-btn-primary:not([disabled]):hover::after { animation: rc-shine 1.1s ease forwards; }
+  .rc-btn-primary:not([disabled]):active { transform: translateY(0) scale(0.98); }
+  .rc-btn-primary[disabled] { opacity: 0.5; box-shadow: none; cursor: default; }
+  .rc-btn-label { position: relative; z-index: 1; }
+  .rc-btn-spinner { position: relative; z-index: 1; width: 15px; height: 15px; border-radius: 50%; border: 2px solid rgba(6,42,30,0.25); border-top-color: var(--rc-green-900); animation: rc-spin 0.7s linear infinite; flex: none; }
+
+  .rc-back { display: flex; align-items: center; justify-content: center; width: 100%; margin: 16px auto 0; border: 0; background: none; color: var(--rc-green-800); font-size: 12px; font-weight: 700; padding: 8px 0; cursor: pointer; transition: opacity 0.15s ease; }
+  .rc-back:hover { opacity: 0.7; }
+
+  .error { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500; color: var(--rc-danger); background: var(--rc-danger-bg); border-radius: 12px; text-align: left; margin: 14px 0 0; padding: 11px 13px; animation: rc-shake 0.4s cubic-bezier(0.36,0.07,0.19,0.97) both; }
+  .rc-error-icon { flex: none; }
+  .hidden { display: none !important; }
+
+  @keyframes rc-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes rc-pulse { 0%,100% { box-shadow: 0 0 0 3px rgba(var(--rc-shadow),0.16); } 50% { box-shadow: 0 0 0 6px rgba(var(--rc-shadow),0.06); } }
+  @keyframes rc-handle-sheen { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  @keyframes rc-shine { from { left: -60%; } to { left: 130%; } }
+  @keyframes rc-spin { to { transform: rotate(360deg); } }
+  @keyframes rc-caret-blink { 0%,50% { opacity: 1; } 51%,100% { opacity: 0; } }
+  @keyframes rc-shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-4px); } 40% { transform: translateX(4px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
+</style>
+</head>
+<body>
+
+<div class="rig">
+  <div class="rig-row">
+    <span class="rig-label" style="align-self:center;">Screen</span>
+    <button data-size="mobile" class="active">Mobile</button>
+    <button data-size="tablet">Tablet</button>
+    <button data-size="desktop">Desktop browser</button>
+  </div>
+  <div class="rig-row">
+    <span class="rig-label" style="align-self:center;">State</span>
+    <button data-state="existing" class="active">Existing user</button>
+    <button data-state="new">New user</button>
+    <button data-state="otp">OTP step</button>
+    <button data-state="loading">Loading</button>
+    <button data-state="error">Error</button>
+  </div>
+</div>
+
+<div class="stage" id="stage">
+  <div class="phone-frame" id="phoneFrame">
+    <div class="phone-screen">
+      <div class="phone-notch"></div>
+      <div id="mountPhone"></div>
+    </div>
+  </div>
+  <div class="browser-frame hidden" id="browserFrame">
+    <div class="browser-bar"><span></span><span></span><span></span></div>
+    <div class="browser-screen" id="mountBrowser"></div>
+  </div>
+</div>
+
+<template id="component-template">
+  <div class="rc-login-modal">
+    <div class="rc-shell">
+      <div class="sheet-handle"></div>
+
+      <div class="header">
+        <div class="rc-eyebrow">
+          <span class="rc-live-dot"></span>
+          <span class="rc-step-label">SECURE LOGIN</span>
+        </div>
+        <h2>Log in to continue</h2>
+        <button class="close" aria-label="Close">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1L13 13M13 1L1 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <div class="rc-route" data-el="route">
+        <div class="rc-route-node">
+          <span class="rc-route-dot"></span>
+          <span class="rc-route-label">Mobile</span>
+        </div>
+        <div class="rc-route-track">
+          <span class="rc-route-fill"></span>
+          <span class="rc-route-puck"></span>
+        </div>
+        <div class="rc-route-node rc-route-node--end">
+          <span class="rc-route-dot"></span>
+          <span class="rc-route-label">Verify</span>
+        </div>
+      </div>
+
+      <div class="body">
+        <div class="rc-panel" data-el="panel-phone">
+          <div class="rc-field rc-phone-field">
+            <span class="rc-phone-code">+91</span>
+            <input class="rc-input rc-phone-input" data-el="phone-input" placeholder="10-digit mobile" value="9876543210" />
+          </div>
+
+          <div class="new-user hidden" data-el="name-field">
+            <p>Looks like you're new here. What should we call you?</p>
+            <input class="rc-input" placeholder="Your name" />
+          </div>
+
+          <button class="rc-btn-primary" data-el="btn-phone">
+            <span class="rc-btn-spinner hidden" data-el="spin-phone"></span>
+            <span class="rc-btn-label" data-el="label-phone">Continue</span>
+          </button>
+        </div>
+
+        <div class="rc-panel hidden" data-el="panel-otp">
+          <p class="rc-subtle">Enter the OTP sent to <strong>9876543210</strong></p>
+          <div class="rc-otp-wrap" data-el="otp-wrap">
+            <input class="rc-otp-input" data-el="otp-input" maxlength="6" value="48" />
+            <div class="rc-otp-boxes" data-el="otp-boxes"></div>
+          </div>
+          <button class="rc-btn-primary" data-el="btn-otp">
+            <span class="rc-btn-spinner hidden"></span>
+            <span class="rc-btn-label">Verify</span>
+          </button>
+          <button class="rc-back">Resend OTP</button>
+        </div>
+
+        <p class="error hidden" data-el="error-msg">
+          <svg class="rc-error-icon" width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.25" stroke="currentColor" stroke-width="1.3"/><path d="M7 4V7.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="9.7" r="0.75" fill="currentColor"/></svg>
+          Invalid OTP. Try again.
+        </p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  const tpl = document.getElementById('component-template');
+  const mountPhone = document.getElementById('mountPhone');
+  const mountBrowser = document.getElementById('mountBrowser');
+  const phoneFrame = document.getElementById('phoneFrame');
+  const browserFrame = document.getElementById('browserFrame');
+
+  function buildOtpBoxes(root) {
+    const boxesEl = root.querySelector('[data-el="otp-boxes"]');
+    boxesEl.innerHTML = '';
+    for (let i = 0; i < 6; i++) {
+      const span = document.createElement('span');
+      span.className = 'rc-otp-box';
+      boxesEl.appendChild(span);
+    }
+  }
+
+  function syncOtpBoxes(root) {
+    const input = root.querySelector('[data-el="otp-input"]');
+    const boxes = root.querySelectorAll('[data-el="otp-boxes"] .rc-otp-box');
+    const val = input.value;
+    boxes.forEach((box, i) => {
+      box.textContent = val[i] || '';
+      box.classList.toggle('is-filled', i < val.length);
+      box.classList.toggle('is-active', i === val.length);
+    });
+  }
+
+  function mount(target) {
+    target.innerHTML = '';
+    const node = tpl.content.cloneNode(true);
+    target.appendChild(node);
+    const root = target;
+    buildOtpBoxes(root);
+    syncOtpBoxes(root);
+
+    const otpInput = root.querySelector('[data-el="otp-input"]');
+    const otpWrap = root.querySelector('[data-el="otp-wrap"]');
+    otpInput.addEventListener('input', () => syncOtpBoxes(root));
+    otpInput.addEventListener('focus', () => otpWrap.classList.add('is-focused'));
+    otpInput.addEventListener('blur', () => otpWrap.classList.remove('is-focused'));
+    otpWrap.addEventListener('click', () => otpInput.focus());
+
+    return root;
+  }
+
+  let activeRoot = mount(mountPhone);
+
+  function applyState(state) {
+    [mountPhone, mountBrowser].forEach(m => {
+      const root = m.querySelector('.rc-login-modal');
+      if (!root) return;
+      const route = root.querySelector('[data-el="route"]');
+      const panelPhone = root.querySelector('[data-el="panel-phone"]');
+      const panelOtp = root.querySelector('[data-el="panel-otp"]');
+      const nameField = root.querySelector('[data-el="name-field"]');
+      const errorMsg = root.querySelector('[data-el="error-msg"]');
+      const phoneInput = root.querySelector('[data-el="phone-input"]');
+      const labelPhone = root.querySelector('[data-el="label-phone"]');
+      const spinPhone = root.querySelector('[data-el="spin-phone"]');
+      const btnPhone = root.querySelector('[data-el="btn-phone"]');
+
+      route.classList.toggle('at-otp', state === 'otp');
+      panelOtp.classList.toggle('hidden', state !== 'otp');
+      panelPhone.classList.toggle('hidden', state === 'otp');
+      nameField.classList.toggle('hidden', state !== 'new');
+      errorMsg.classList.toggle('hidden', state !== 'error');
+      phoneInput.disabled = state === 'new';
+      labelPhone.textContent = state === 'new' ? 'Send OTP' : 'Continue';
+      spinPhone.classList.toggle('hidden', state !== 'loading');
+      btnPhone.disabled = state === 'loading';
+      if (state === 'otp') syncOtpBoxes(root);
+    });
+  }
+
+  document.querySelectorAll('.rig-row button[data-state]').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.rig-row button[data-state]').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      applyState(b.dataset.state);
+    });
+  });
+
+  document.querySelectorAll('.rig-row button[data-size]').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.rig-row button[data-size]').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      const size = b.dataset.size;
+      const activeState = document.querySelector('.rig-row button[data-state].active').dataset.state;
+
+      if (size === 'mobile') {
+        phoneFrame.classList.remove('hidden');
+        browserFrame.classList.add('hidden');
+        mount(mountPhone);
+      } else {
+        phoneFrame.classList.add('hidden');
+        browserFrame.classList.remove('hidden');
+        browserFrame.style.maxWidth = size === 'tablet' ? '760px' : '1180px';
+        mount(mountBrowser);
+      }
+      applyState(activeState);
+    });
+  });
+</script>
+
+</body>
+</html>

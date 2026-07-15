@@ -14,3 +14,13 @@
   border-color: var(--rc-green-800);
   color: #fff;
 }
+.rc-option-image-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.rc-option-image {
+  max-height: 64px;
+  max-width: 120px;
+  object-fit: contain;
+}

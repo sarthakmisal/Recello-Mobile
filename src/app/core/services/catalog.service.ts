@@ -8,8 +8,8 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class CatalogService {
-  private product = `${environment.apiUrl}/product`;
-  private system = `${environment.apiUrl}/system`;
+  private product = `${environment.apiUrl}/api/product`;
+  private system = `${environment.apiUrl}/api/system`;
 
   constructor(private http: HttpClient) { }
 

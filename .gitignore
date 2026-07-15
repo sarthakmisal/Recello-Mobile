@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Temporary files
 *~
 *.sw[mnpcod]
@@ -51,70 +50,21 @@ coverage/
 !.env.example
 
 # IDEs & Editors
-=======
-# Specifies intentionally untracked files to ignore when using Git
-# http://git-scm.com/docs/gitignore
-
-*~
-*.sw[mnpcod]
-.tmp
-*.tmp
-*.tmp.*
-UserInterfaceState.xcuserstate
-$RECYCLE.BIN/
-
-*.log
-log.txt
-
-
-/.sourcemaps
-/.versions
-/coverage
-
-# Ionic
-/.ionic
-/www
-/platforms
-/plugins
-
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
-
-# Node
-/node_modules
-npm-debug.log
-yarn-error.log
-
-# IDEs and editors
->>>>>>> master
 .idea/
 .project
 .classpath
 .c9/
-<<<<<<< HEAD
 .settings/
 *.launch
 *.sublime-project
 *.sublime-workspace
 
 # VS Code
-=======
-*.launch
-.settings/
-*.sublime-project
-*.sublime-workspace
-
-# Visual Studio Code
->>>>>>> master
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-<<<<<<< HEAD
 
 # History
 .history/
@@ -158,29 +108,10 @@ GoogleService-Info.plist
 *.jks
 *.p12
 *.pem
-=======
-.history/*
-
-
-# Miscellaneous
-/.angular
-/.angular/cache
-.sass-cache/
-/.nx
-/.nx/cache
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
->>>>>>> master
 
 # System files
 .DS_Store
 Thumbs.db
-<<<<<<< HEAD
-$RECYCLE.BIN/
-=======
 
 www/
 trash/
@@ -190,4 +121,3 @@ coverage/
 .env
 .env.*
 android
->>>>>>> master

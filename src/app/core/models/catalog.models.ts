@@ -35,6 +35,7 @@ export interface ApiModelDetail {
 export interface ApiOption {
   id: number;
   text: string;
+  /** Percentage of the variant's base_price to deduct if this option is selected. */
   deduction: number;
   show: number[];
   option_image_id?: string | null;
@@ -43,19 +44,18 @@ export interface ApiOption {
 
 export interface ApiQuestion {
   id: number;
-  text: string;
-  input_type: 'single_select' | 'multi_select';
-  description: string;
+  context: number;
   context_label: string;
-  sort_index: number;
+  que_type: 'single_select' | 'multi_select' | 'yes_no';
+  question: string;
   options: ApiOption[];
-  categories: { id: number; name: string }[];
 }
 
-export interface ApiQuestionResponse {
+/** GET /sell/questions/:modelSlug returns an array, one entry per model. */
+export type ApiQuestionResponse = {
   model: string;
   questions: ApiQuestion[];
-}
+}[];
 
 /* ── App-facing models ──────────────────────────────────────── */
 export interface Brand {
@@ -90,22 +90,23 @@ export interface ModelDetail {
   variants: Variant[];
 }
 
-export type QuestionType = 'single_select' | 'multi_select';
+export type QuestionType = 'single_select' | 'multi_select' | 'yes_no';
 
 export interface SellOption {
   id: number;
   text: string;
+  /** Percentage of the variant's base_price to deduct if this option is selected. */
   deduction: number;
   show: number[];
-  option_image_url?: string | null;
+  option_image_id?: string | null;
+  option_image_url: string | null;
 }
 
 export interface SellQuestion {
   id: number;
   question: string;
   que_type: QuestionType;
-  description?: string;
+  context: number;
   context_label: string;
-  sort_index: number;
   options: SellOption[];
 }

@@ -1,34 +1,21 @@
 /* ── Auth ────────────────────────────────────────────────────── */
 export interface UserProfile {
-  _id?: string;
-  id?: string;
-  name?: string;
-  phone?: string;
-  email?: string;
-}
-
-export interface AuthTokens {
-  accessToken: string;
-  refreshToken: string;
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  roles?: string[];
+  avatar_url?: string | null;
 }
 
 export interface AuthResponse {
   accessToken: string;
-  refreshToken: string;
-  user?: UserProfile;
-  isNewUser?: boolean;
+  user: UserProfile;
 }
 
 /* ── Answers / price calc ───────────────────────────────────── */
 export interface QuestionAnswer {
   question_id: number;
-  option_ids: number[];
-}
-
-export interface CalculatePriceRequest {
-  model_slug: string;
-  variant_id: string;
-  answers: QuestionAnswer[];
+  options: number[];
 }
 
 export interface PriceDeduction {
@@ -36,6 +23,7 @@ export interface PriceDeduction {
   amount: number;
 }
 
+/** Computed entirely on the client from the variant base price + selected option deductions. */
 export interface PriceCalculation {
   basePrice: number;
   finalPrice: number;
@@ -44,47 +32,63 @@ export interface PriceCalculation {
 
 /* ── Listings (leads) ───────────────────────────────────────── */
 export interface ListingCreateRequest {
+  category_slug: string;
+  brand_slug: string;
   model_slug: string;
-  variant_id: string;
-  brand: string;
-  model: string;
-  variant: string;
-  base_price: number;
-  final_price: number;
+  config_id: number;
   answers: QuestionAnswer[];
+  expected_price: number;
 }
 
 export interface Listing {
-  _id: string;
-  deviceName: string;
-  offer: number;
+  id: string;
+  base_price: number;
+  quoted_price: number;
+  expected_price: number;
   status: string;
-  createdAt: string;
-  pickupDate?: string;
-  pickupSlot?: string;
 }
 
 /* ── Addresses & pickup ─────────────────────────────────────── */
 export interface Address {
   id: string;
-  label?: string;
+  user_id?: string;
+  name: string;
+  phone: string;
   line1: string;
   line2?: string;
   city: string;
+  state: string;
   pincode: string;
-  phone?: string;
-  isDefault?: boolean;
+  country?: string;
+  is_default?: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface AddressCreateRequest {
+  name: string;
+  phone: string;
+  line1: string;
+  line2?: string;
+  city: string;
+  state: string;
+  pincode: string;
+  country?: string;
+  is_default?: boolean;
 }
 
 export interface PickupSlot {
   date: string;   // yyyy-mm-dd
   label: string;  // e.g. "Today", "Tomorrow", "Wed, 16 Jul"
+  start: string;  // e.g. "10:00"
+  end: string;    // e.g. "13:00"
 }
 
 export interface PickupRequest {
   listing_id: string;
-  address_id?: string;
-  address?: Partial<Address>;
+  address_id: string;
   pickup_date: string;
-  pickup_slot: string;
+  pickup_slot_start: string;
+  pickup_slot_end: string;
+  notes?: string;
 }
