@@ -1,0 +1,174 @@
+<ion-content class="rc-modal">
+  <div class="sheet-handle"></div>
+
+  <div class="modal-header">
+    <button class="icon-btn" *ngIf="showBack" (click)="goBack()">‹</button>
+    <span *ngIf="!showBack"></span>
+    <button class="icon-btn" (click)="dismiss()">×</button>
+  </div>
+
+  <div class="rc-progress" *ngIf="step === 'questions'">
+    <span [style.width.%]="progressPct"></span>
+  </div>
+
+  <div class="modal-body" [ngSwitch]="step">
+
+    <!-- STEP: Brand -->
+    <ng-container *ngSwitchCase="'brand'">
+      <span class="rc-step-label">STEP 1 OF 3</span>
+      <h2 class="rc-title">Choose your phone brand</h2>
+      <input class="rc-search" [(ngModel)]="brandQuery" placeholder="Search brand" />
+      <div class="rc-option-list">
+        <rc-option-row *ngFor="let b of filteredBrands" [title]="b.name"
+          [subtitle]="b.seriesCount + ' series'" (rowClick)="selectBrand(b)"></rc-option-row>
+      </div>
+      <div class="rc-empty" *ngIf="!loading && filteredBrands.length === 0">No brands match “{{ brandQuery }}”.</div>
+    </ng-container>
+
+    <!-- STEP: Model -->
+    <ng-container *ngSwitchCase="'model'">
+      <span class="rc-step-label">STEP 1 OF 3</span>
+      <h2 class="rc-title">Select {{ selectedBrand?.name }} model</h2>
+      <input class="rc-search" [(ngModel)]="modelQuery" placeholder="Search model" />
+      <div class="rc-option-list">
+        <rc-option-row *ngFor="let m of filteredModels" [title]="m.name"
+          subtitle="Instant quote available" (rowClick)="selectModel(m)"></rc-option-row>
+      </div>
+      <div class="rc-empty" *ngIf="!loading && filteredModels.length === 0">No models match “{{ modelQuery }}”.</div>
+    </ng-container>
+
+    <!-- STEP: Variant -->
+    <ng-container *ngSwitchCase="'variant'">
+      <span class="rc-step-label">STEP 2 OF 3</span>
+      <h2 class="rc-title">Choose storage variant</h2>
+      <p class="rc-subtle">{{ selectedModel?.name }}</p>
+      <div class="rc-option-list">
+        <rc-option-row *ngFor="let v of variants" [title]="v.name"
+          subtitle="Select the exact phone storage" (rowClick)="selectVariant(v)"></rc-option-row>
+      </div>
+      <div class="rc-empty" *ngIf="!loading && variants.length === 0">No variants available for this model.</div>
+    </ng-container>
+
+    <!-- STEP: Estimate -->
+    <ng-container *ngSwitchCase="'estimate'">
+      <span class="rc-step-label">YOUR ESTIMATED QUOTE</span>
+      <h2 class="rc-title">Great news!</h2>
+      <div class="rc-result-card">
+        <small>ESTIMATED VALUE FOR {{ selectedModel?.name?.toUpperCase() }}</small>
+        <h3>Up to {{ selectedVariant?.base_price | inr }}</h3>
+        <p>Final price is confirmed after answering a few condition questions.</p>
+      </div>
+      <button class="rc-btn-yellow mt" (click)="getExactPrice()">Get exact price</button>
+    </ng-container>
+
+    <!-- STEP: Login — phone -->
+    <ng-container *ngSwitchCase="'login-phone'">
+      <span class="rc-step-label">SECURE LOGIN</span>
+      <h2 class="rc-title">Enter your phone number</h2>
+      <p class="rc-subtle">We'll text you a one-time code to confirm it's you.</p>
+      <input class="rc-search" type="tel" inputmode="numeric" maxlength="10"
+        placeholder="10-digit mobile number" [(ngModel)]="phone" />
+      <button class="rc-btn-primary mt" [disabled]="loading" (click)="sendOtp()">Send OTP</button>
+    </ng-container>
+
+    <!-- STEP: Login — otp -->
+    <ng-container *ngSwitchCase="'login-otp'">
+      <span class="rc-step-label">VERIFY OTP</span>
+      <h2 class="rc-title">Enter the code sent to {{ phone }}</h2>
+      <input class="rc-search rc-otp-input" type="tel" inputmode="numeric" maxlength="6"
+        placeholder="••••" [(ngModel)]="otp" />
+      <button class="rc-btn-primary mt" [disabled]="loading" (click)="verifyOtp()">Verify &amp; continue</button>
+      <button class="rc-back" (click)="resendOtp()">Resend OTP</button>
+    </ng-container>
+
+    <!-- STEP: Questions -->
+    <ng-container *ngSwitchCase="'questions'">
+      <ng-container *ngIf="currentQuestion as q">
+        <span class="rc-step-label">QUESTION {{ flowPosition() }} OF {{ flowTotal() }}</span>
+        <h2 class="rc-title">{{ q.question }}</h2>
+        <p class="rc-subtle" *ngIf="q.description">{{ q.description }}</p>
+        <div class="rc-option-list">
+          <rc-option-row *ngFor="let opt of q.options" [title]="opt.text"
+            [subtitle]="opt.deduction ? ('-' + (opt.deduction | inr)) : ''"
+            [multi]="q.que_type === 'multi_select'"
+            [selected]="isOptionSelected(opt)" (rowClick)="chooseOption(opt)"></rc-option-row>
+        </div>
+        <button class="rc-btn-primary mt" *ngIf="q.que_type === 'multi_select'"
+          [disabled]="selectedOptionIds.length === 0" (click)="submitAnswer()">Continue</button>
+      </ng-container>
+    </ng-container>
+
+    <!-- STEP: Final price -->
+    <ng-container *ngSwitchCase="'final'">
+      <span class="rc-step-label">YOUR FINAL OFFER</span>
+      <h2 class="rc-title">Here's what we can pay</h2>
+      <div class="rc-result-card" *ngIf="priceCalc as p">
+        <small>FINAL OFFER</small>
+        <h3>{{ p.finalPrice | inr }}</h3>
+        <p>Base price {{ p.basePrice | inr }}</p>
+      </div>
+      <div class="deductions" *ngIf="priceCalc?.deductions?.length">
+        <div class="rc-deduction-row" *ngFor="let d of priceCalc?.deductions">
+          <span>{{ d.label }}</span>
+          <span class="amt">-{{ d.amount | inr }}</span>
+        </div>
+      </div>
+      <button class="rc-btn-yellow mt" [disabled]="loading" (click)="proceedToPickup()">Schedule free pickup</button>
+    </ng-container>
+
+    <!-- STEP: Pickup -->
+    <ng-container *ngSwitchCase="'pickup'">
+      <span class="rc-step-label">SCHEDULE PICKUP</span>
+      <h2 class="rc-title">Where should we collect it?</h2>
+
+      <div class="rc-option-list" *ngIf="addresses.length">
+        <rc-option-row *ngFor="let a of addresses"
+          [title]="a.label || a.line1" [subtitle]="a.line1 + ', ' + a.city + ' - ' + a.pincode"
+          [selected]="selectedAddress?.id === a.id" (rowClick)="selectAddress(a)"></rc-option-row>
+      </div>
+      <div class="rc-empty" *ngIf="!loading && addresses.length === 0">No saved addresses yet.</div>
+      <button class="rc-back" (click)="openNewAddress()">+ Add a new address</button>
+
+      <p class="rc-subtle mt">Pickup slot</p>
+      <div class="rc-chip-row">
+        <button class="rc-chip" *ngFor="let s of slots" [class.selected]="selectedSlot?.date === s.date"
+          (click)="selectSlot(s)">{{ s.label }}</button>
+      </div>
+
+      <button class="rc-btn-primary" [disabled]="loading || !selectedAddress || !selectedSlot"
+        (click)="confirmPickup()">Confirm pickup</button>
+    </ng-container>
+
+    <!-- STEP: New address -->
+    <ng-container *ngSwitchCase="'new-address'">
+      <span class="rc-step-label">NEW ADDRESS</span>
+      <h2 class="rc-title">Add pickup address</h2>
+      <div class="field-stack">
+        <input class="rc-search" placeholder="Address line" [(ngModel)]="newAddress.line1" />
+        <input class="rc-search" placeholder="City" [(ngModel)]="newAddress.city" />
+        <input class="rc-search" placeholder="Pincode" inputmode="numeric" maxlength="6" [(ngModel)]="newAddress.pincode" />
+        <input class="rc-search" placeholder="Contact number (optional)" inputmode="numeric" maxlength="10" [(ngModel)]="newAddress.phone" />
+      </div>
+      <button class="rc-btn-primary mt" [disabled]="loading" (click)="saveNewAddress()">Save address</button>
+    </ng-container>
+
+    <!-- STEP: Success -->
+    <ng-container *ngSwitchCase="'success'">
+      <div class="success-block">
+        <div class="success-icon">✓</div>
+        <h2 class="rc-title center">Pickup scheduled!</h2>
+        <p class="rc-subtle center">
+          We'll collect your {{ selectedModel?.name }} on {{ selectedSlot?.label }}.
+          Payment is released right after verification.
+        </p>
+        <button class="rc-btn-primary mt" (click)="dismiss()">Done</button>
+      </div>
+    </ng-container>
+
+  </div>
+
+  <p class="rc-error-text" *ngIf="errorMsg">{{ errorMsg }}</p>
+  <div class="loading-row" *ngIf="loading"><ion-spinner name="dots"></ion-spinner></div>
+
+  <div class="rc-toast" [class.show]="toastVisible">{{ toastMsg }}</div>
+</ion-content>

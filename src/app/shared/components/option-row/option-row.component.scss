@@ -1,0 +1,16 @@
+.check {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid var(--rc-line);
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  color: transparent;
+  flex-shrink: 0;
+}
+.check.on {
+  background: var(--rc-green-800);
+  border-color: var(--rc-green-800);
+  color: #fff;
+}

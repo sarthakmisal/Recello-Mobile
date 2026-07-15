@@ -1,0 +1,25 @@
+<ion-content class="rc-login-modal">
+    <div class="header">
+        <h2>Secure Login</h2>
+        <button class="close" (click)="close()">×</button>
+    </div>
+
+    <div class="body">
+        <div *ngIf="step === 'phone'">
+            <input placeholder="10-digit mobile" [(ngModel)]="phone" inputmode="numeric" maxlength="10" />
+            <div *ngIf="isNewUser">
+                <input placeholder="Your name" [(ngModel)]="name" />
+            </div>
+            <button (click)="start()" [disabled]="loading">Continue</button>
+        </div>
+
+        <div *ngIf="step === 'otp'">
+            <p>Enter the OTP sent to {{ phone }}</p>
+            <input placeholder="OTP" [(ngModel)]="otp" inputmode="numeric" maxlength="6" />
+            <button (click)="verify()" [disabled]="loading">Verify</button>
+            <button (click)="resend()">Resend</button>
+        </div>
+
+        <p class="error" *ngIf="error">{{ error }}</p>
+    </div>
+</ion-content>
