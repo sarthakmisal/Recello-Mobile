@@ -1,0 +1,48 @@
+.rc-page { --background: var(--rc-page); }
+
+.hero {
+  background: linear-gradient(148deg, var(--rc-green-900) 0%, var(--rc-green-800) 53%, #0e9d72 100%);
+  padding: 32px 16px 44px;
+  color: #fff;
+}
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255, 255, 255, 0.13); border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 7px 10px; border-radius: 999px; font-size: 11px; font-weight: 750;
+}
+.eyebrow span { color: var(--rc-yellow); }
+.hero h1 { font-size: 30px; line-height: 1.1; letter-spacing: -1.2px; margin: 15px 0 8px; }
+.hero h1 span { color: var(--rc-yellow); }
+.hero p { font-size: 13px; color: rgba(255, 255, 255, 0.82); margin: 0; }
+
+.quote-card {
+  margin: -26px 14px 20px;
+  padding: 18px 15px 15px;
+  position: relative;
+  z-index: 2;
+}
+
+.search-trigger {
+  display: flex; align-items: center; gap: 10px;
+  color: #75837d;
+}
+.flex1 { flex: 1; text-align: left; }
+
+.or {
+  display: flex; align-items: center; gap: 10px;
+  margin: 14px 0 12px; color: #8b9792; font-size: 9px;
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.or::before, .or::after { content: ""; height: 1px; background: var(--rc-line); flex: 1; }
+
+.brand-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.brand-tile {
+  border: 1px solid var(--rc-line); background: #fff; border-radius: 13px;
+  padding: 9px 4px 8px; display: flex; flex-direction: column; align-items: center;
+  gap: 6px; font-size: 9.5px; font-weight: 700; color: #405049;
+}
+.brand-tile:active { background: var(--rc-green-50); border-color: #8ac6ad; }
+.brand-icon {
+  width: 30px; height: 30px; display: grid; place-items: center; border-radius: 9px;
+  font-size: 13px; font-weight: 900; background: #f2f5f4; color: #1a2c25;
+}

@@ -1,0 +1,36 @@
+<ion-content [fullscreen]="true" class="rc-page">
+  <section class="hero">
+    <div class="eyebrow"><span>⚡</span> Instant mobile valuation</div>
+    <h1>Sell your old phone.<br /><span>Get more. Get paid fast.</span></h1>
+    <p>Instant quote, free doorstep pickup and secure payment.</p>
+  </section>
+
+  <section class="quote-card rc-card">
+    <div class="quote-head">
+      <div>
+        <span class="rc-step-label">STEP 1</span>
+        <h2 class="rc-title">Which phone are you selling?</h2>
+      </div>
+    </div>
+
+    <button class="rc-search search-trigger" type="button" (click)="openQuote()">
+      <span>🔍</span>
+      <span class="flex1">Search your phone model</span>
+    </button>
+
+    <div class="or"><span>or choose a brand</span></div>
+
+    <div class="brand-grid" *ngIf="!loading && !loadError">
+      <button class="brand-tile" *ngFor="let b of brands" (click)="openQuote(b.slug)">
+        <span class="brand-icon">{{ b.name.charAt(0) }}</span>
+        <span>{{ b.name }}</span>
+      </button>
+    </div>
+
+    <div class="rc-empty" *ngIf="loading">Loading brands…</div>
+    <div class="rc-empty" *ngIf="loadError">
+      Couldn't load brands.
+      <button class="rc-back" (click)="loadBrands()">Retry</button>
+    </div>
+  </section>
+</ion-content>

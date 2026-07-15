@@ -1,25 +1,18 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { AppRoutingModule } from './app-routing.module';
+
 import { AppComponent } from './app.component';
-import { ComponentsModule } from './components/components-module';
-import { authInterceptor } from './interceptors/auth.interceptor';
+import { AppRoutingModule } from './app-routing.module';
+import { CoreModule } from './core/core.module';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [
-    BrowserModule,
-    IonicModule.forRoot({ mode: 'ios' }),
-    AppRoutingModule,
-    ComponentsModule,
-  ],
-  providers: [
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    provideHttpClient(withInterceptors([authInterceptor])),
-  ],
+  imports: [BrowserModule, IonicModule.forRoot(), HttpClientModule, CoreModule, AppRoutingModule],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

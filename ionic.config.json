@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "name": "recello",
+=======
+  "name": "test",
+>>>>>>> master
   "integrations": {
     "capacitor": {}
   },
