@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-
+import { Platform } from '@ionic/angular'
+import { StatusBar, Style } from '@capacitor/status-bar'
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -7,5 +8,10 @@ import { Component } from '@angular/core';
   standalone: false,
 })
 export class AppComponent {
-  constructor() {}
+  constructor(private platform: Platform) {
+    this.platform.ready().then(async () => {
+      await StatusBar.setOverlaysWebView({ overlay: false });
+      await StatusBar.setStyle({ style: Style.Dark });
+    });
+  }
 }

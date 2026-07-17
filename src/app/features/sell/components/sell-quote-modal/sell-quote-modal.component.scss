@@ -34,3 +34,13 @@
 .center { text-align: center; }
 
 .loading-row { display: flex; justify-content: center; padding: 10px 0; }
+
+// Wide viewports — mirrors the login modal's floating-card treatment so the
+// sheet doesn't look stretched thin on a desktop-size ion-modal.
+@media (min-width: 640px) {
+  .rc-modal { --padding-start: 30px; --padding-end: 30px; --padding-bottom: 30px; }
+  .sheet-handle { display: none; }
+  .icon-btn { width: 36px; height: 36px; font-size: 19px; }
+  .rc-checkbox-row { font-size: 15px; }
+  .success-icon { width: 70px; height: 70px; font-size: 32px; }
+}

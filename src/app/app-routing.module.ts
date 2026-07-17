@@ -4,12 +4,12 @@ import { LoginModalComponent } from './core/components/login-modal/login-modal.c
 
 const routes: Routes = [
   {
-    path: 'sell',
+    path: '',
     loadChildren: () => import('./features/sell/sell.module').then(m => m.SellModule)
   },
   {
     path: '',
-    redirectTo: 'sell',
+    redirectTo: '',
     pathMatch: 'full'
   },
 ];
