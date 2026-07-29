@@ -1,0 +1,95 @@
+<ion-content [fullscreen]="true" class="rc-page">
+
+  <header class="page-header">
+    <button class="icon-btn" type="button" aria-label="Go back" (click)="goBack()">‹</button>
+    <span class="page-title">Delete account</span>
+    <span class="header-spacer" aria-hidden="true"></span>
+  </header>
+
+  <div class="shell">
+
+    <!-- Loading -->
+    <div class="state-loading" *ngIf="loading">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Checking your account status…</p>
+    </div>
+
+    <!-- Error -->
+    <div class="state-error" *ngIf="!loading && loadError">
+      <div class="state-icon warn">!</div>
+      <h2>Couldn't load this page</h2>
+      <p>Something went wrong while fetching your account status. Please check your connection or try <span class="text-primary" style="cursor: pointer;" (click)="myRedirect('/login')">logging in</span> again.</p>
+      <button class="rc-btn-primary" type="button" (click)="loadStatus()">Try again</button>
+    </div>
+
+    <ng-container *ngIf="!loading && !loadError && status">
+
+      <!-- Deletion already scheduled -->
+      <div class="status-card" *ngIf="isScheduled">
+        <div class="ring" [style.--pct]="progressPct">
+          <div class="ring-inner">
+            <strong>{{ status.remaining_days }}</strong>
+            <span>days left</span>
+          </div>
+        </div>
+
+        <h2>Deletion scheduled</h2>
+        <p class="lead">Your account and all associated data will be permanently deleted once the countdown ends. This can't be undone.</p>
+
+        <div class="reason-note">
+          <span class="reason-label">Reason you gave</span>
+          <p>"{{ status.reason }}"</p>
+        </div>
+
+        <div class="progress-track">
+          <div class="progress-fill" [style.width.%]="progressPct"></div>
+        </div>
+        <div class="progress-caption">
+          <span>Requested</span>
+          <span>Deleted</span>
+        </div>
+      </div>
+
+      <!-- Not requested yet -->
+      <div class="request-card" *ngIf="!isScheduled">
+        <div class="state-icon danger">⚠</div>
+        <h2>Delete your account</h2>
+        <p class="lead">
+          This schedules your account for permanent deletion. You'll have a {{ gracePeriodDays }}-day
+          grace period before it's final — after that, this can't be undone.
+        </p>
+
+        <ul class="consequence-list">
+          <li><span>✕</span> Your profile, listings, and saved addresses will be erased</li>
+          <li><span>✕</span> You'll lose access to any pending pickups or offers</li>
+          <li><span>⏱</span> Deletion happens automatically {{ gracePeriodDays }} days after you request it</li>
+        </ul>
+
+        <label class="field-label" for="reason">Tell us why you're leaving</label>
+        <textarea
+          id="reason"
+          class="rc-textarea"
+          rows="3"
+          placeholder="e.g. I just want to get it deleted"
+          maxlength="240"
+          [(ngModel)]="reasonInput"
+        ></textarea>
+
+        <label class="confirm-row">
+          <input type="checkbox" [(ngModel)]="confirmed" />
+          <span>I understand this will permanently delete my account after {{ gracePeriodDays }} days.</span>
+        </label>
+
+        <p class="rc-error-text" *ngIf="submitError">{{ submitError }}</p>
+
+        <button class="rc-btn-danger" type="button" [disabled]="!canSubmit" (click)="confirmDelete()">
+          <ion-spinner name="crescent" *ngIf="submitting"></ion-spinner>
+          <span *ngIf="!submitting">Request account deletion</span>
+        </button>
+      </div>
+
+    </ng-container>
+
+  </div>
+
+</ion-content>

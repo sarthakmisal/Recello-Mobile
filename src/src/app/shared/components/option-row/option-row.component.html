@@ -1,8 +1,0 @@
-<button type="button" class="rc-option" [class.selected]="selected" (click)="rowClick.emit()">
-  <div>
-    <strong style="color: black;">{{ title }}</strong>
-    <small *ngIf="subtitle">{{ subtitle }}</small>
-  </div>
-  <span class="rc-chev" *ngIf="!multi">›</span>
-  <span class="check" *ngIf="multi" [class.on]="selected">✓</span>
-</button>

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { Platform } from '@ionic/angular'
-import { StatusBar, Style } from '@capacitor/status-bar'
+import { StatusBar, Style } from '@capacitor/status-bar';
+import { Platform } from '@ionic/angular';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -9,9 +10,11 @@ import { StatusBar, Style } from '@capacitor/status-bar'
 })
 export class AppComponent {
   constructor(private platform: Platform) {
-    this.platform.ready().then(async () => {
-      await StatusBar.setOverlaysWebView({ overlay: false });
-      await StatusBar.setStyle({ style: Style.Dark });
-    });
+    if (this.platform.is('capacitor')) {
+      this.platform.ready().then(async () => {
+        await StatusBar.setOverlaysWebView({ overlay: false });
+        await StatusBar.setStyle({ style: Style.Dark });
+      });
+    }
   }
 }

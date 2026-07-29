@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { ApiQuestionResponse, SellOption, SellQuestion } from '../models/catalog.models';
 import {
   Address, AddressCreateRequest, Listing, ListingCreateRequest,
+  Order,
   PickupRequest, PriceCalculation, QuestionAnswer
 } from '../models/sell-flow.models';
 
@@ -83,5 +84,14 @@ export class SellService {
   /** POST /api/users/addresses/ (requires auth) */
   addAddress(address: AddressCreateRequest): Observable<Address> {
     return this.http.post<Address>(`${this.users}/addresses/`, address);
+  }
+
+  /** GET /api/sell/orders (requires auth) */
+  getOrders(): Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.sell}/orders`,{headers:{
+
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+    }});
   }
 }

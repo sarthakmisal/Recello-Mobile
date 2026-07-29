@@ -24,6 +24,10 @@
 }
 .cycle-arrow { position: absolute; color: var(--rc-yellow, #ffd335); font-size: 15px; left: 2px; top: -3px; transform: rotate(-18deg); }
 .brand-copy { display: flex; flex-direction: column; line-height: 1; }
+// .brand-copy img{
+//   width: 100%;
+//   height: 5rem;
+// }
 .brand-name { font-size: 19px; font-weight: 850; letter-spacing: -.7px; color: var(--rc-green-900, #05533d); }
 // .brand-name { font-size: 19px; font-weight: 850; letter-spacing: -.7px; color: var(--rc-green-900, #05533d); }
 .brand-tagline { font-size: 7.5px; text-transform: uppercase; letter-spacing: .09em; color: var(--rc-muted, #65746e); margin-top: 4px; white-space: nowrap; }
@@ -65,15 +69,33 @@
 .brand-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .brand-tile { border: 1px solid var(--rc-line, #dfe8e3); background: #fff; border-radius: 13px; padding: 9px 4px 8px; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 9.5px; font-weight: 700; color: #405049; }
 .brand-tile:active { background: var(--rc-green-50, #effbf6); border-color: #8ac6ad; }
-.brand-icon { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 9px; font-size: 13px; font-weight: 900; background: #f2f5f4; color: #1a2c25; }
-.brand-icon.apple { font-size: 15px; }
-.brand-icon.samsung { background: #eaf0ff; color: #1646a0; }
-.brand-icon.oneplus { background: #fff0f0; color: #e02828; }
-.brand-icon.xiaomi, .brand-icon.redmi { background: #fff0e5; color: #f06b10; }
-.brand-icon.vivo { background: #e9f2ff; color: #2866b0; }
-.brand-icon.oppo { background: #e9f9ee; color: #118645; }
-.brand-icon.realme { background: #fff6ca; color: #111; }
-.brand-icon.google, .brand-icon.nothing, .brand-icon.motorola { background: var(--rc-green-50, #effbf6); color: var(--rc-green-800, #087a55); }
+
+.brand-icon { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 9px; font-size: 13px; font-weight: 900; background: #ffffff; color: #1a2c25; 
+}// f2f5f4
+
+.brand-icon img{ width: 100%; }
+@media(min-width:768px){
+  .brand-icon img{ transform: scale(2.6); }
+  .brand-icon.xiaomi img,.brand-icon.xiomi img, .brand-icon.motorolla img{ transform: scale(1.8); }
+  .brand-icon.one-plus img{ transform: scale(3.7); }
+  .brand-icon.maccintosh img{ transform: scale(2); }
+}
+
+@media(max-width:767px){
+  .brand-icon img{ transform: scale(2); }
+  .brand-icon.xiaomi img,.brand-icon.xiomi img, .brand-icon.motorolla img{ transform: scale(1.3); }
+  .brand-icon.one-plus img{ transform: scale(2.5); }
+  .brand-icon.maccintosh img{ transform: scale(1.8); }
+}
+// .brand-icon.apple { font-size: 15px; }
+// .brand-icon.samsung { background: #eaf0ff; color: #1646a0; }
+// .brand-icon.oneplus { background: #fff0f0; color: #e02828; }
+// .brand-icon.xiaomi, .brand-icon.redmi { background: #fff0e5; color: #f06b10; }
+// .brand-icon.vivo { 
+//   background: #e9f2ff; color: #2866b0; }
+// .brand-icon.oppo { background: #e9f9ee; color: #118645; }
+// .brand-icon.realme { background: #fff6ca; color: #111; }
+// .brand-icon.google, .brand-icon.nothing, .brand-icon.motorola { background: var(--rc-green-50, #effbf6); color: var(--rc-green-800, #087a55); }
 .quote-proof { display: flex; align-items: center; gap: 9px; margin-top: 14px; padding-top: 13px; border-top: 1px solid var(--rc-line, #dfe8e3); }
 .avatar-stack { display: flex; padding-left: 7px; }
 .avatar-stack span { width: 25px; height: 25px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-size: 9px; font-weight: 800; border: 2px solid #fff; margin-left: -7px; background: var(--rc-green-800, #087a55); }
@@ -100,7 +122,7 @@
 .phone-scroller, .review-scroller { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 2px 1px 10px; scrollbar-width: none; }
 .phone-scroller::-webkit-scrollbar, .review-scroller::-webkit-scrollbar { display: none; }
 .phone-card { min-width: 160px; scroll-snap-align: start; border: 1px solid var(--rc-line, #dfe8e3); border-radius: 18px; padding: 13px; background: #fff; position: relative; }
-.popular-badge { position: absolute; left: 10px; top: 10px; background: var(--rc-yellow, #ffd335); padding: 4px 6px; border-radius: 999px; font-size: 7px; font-weight: 900; }
+.popular-badge { position: absolute; left: 10px; top: 10px; background: var(--rc-yellow, #ffd335); padding: 4px 6px; border-radius: 999px; font-size: 7px; font-weight: 900; z-index: 99; }
 .phone-visual { height: 100px; margin: -2px -2px 10px; border-radius: 14px; background: linear-gradient(145deg, #eaf7f0, #f7f8f7); position: relative; display: grid; place-items: center; }
 .phone-visual::before { content: ""; width: 46px; height: 82px; border-radius: 12px; background: linear-gradient(160deg, #17455f, #5e9ab7); border: 2px solid #183038; }
 .phone-visual.galaxy::before { background: linear-gradient(160deg, #4e5b52, #b8c3b7); border-radius: 8px; }
@@ -194,16 +216,16 @@
   .hero h1 { font-size: 44px; }
   .hero-copy > p { font-size: 15px; }
   .hero-pills span { font-size: 11.5px; padding: 8px 11px; }
-  .secure-badge { font-size: 11px; }
+  .secure-badge { font-size: 0.8rem; }
   .brand-tile { font-size: 11px; padding: 11px 5px 10px; }
   .brand-icon { width: 34px; height: 34px; font-size: 14px; }
-  .quote-proof p { font-size: 10px; }
-  .quote-proof strong { font-size: 11px; }
+  .quote-proof p { font-size: 0.72rem; }
+  .quote-proof strong { font-size: 0.72rem; }
   .benefit-strip { padding: 22px 20px; }
   .benefit-strip article { flex-direction: row; justify-content: center; text-align: left; gap: 11px; }
-  .benefit-icon { width: 36px; height: 36px; font-size: 16px; margin: 0; }
-  .benefit-strip strong { font-size: 13px; }
-  .benefit-strip small { font-size: 10px; }
+  .benefit-icon { width: 36px; height: 36px; font-size: 1.5rem; margin: 0; }
+  .benefit-strip strong { font-size: 1rem; }
+  .benefit-strip small { font-size: 0.8rem; }
   .section { padding: 56px 32px; max-width: 1100px; margin-left: auto; margin-right: auto; }
   .section-heading, .why-copy, .why-grid { max-width: 1100px; margin-left: auto; margin-right: auto; }
   .section-heading h2, .offer-banner h2, .why h2 { font-size: 30px; }
@@ -256,11 +278,12 @@
 // Large desktop — same layout skeleton, just given room to breathe so it
 // doesn't read as a stretched mobile page on wide monitors.
 @media (min-width: 1280px) {
-  .site-header, .section, .section-heading, .why-copy, .why-grid, .steps {
+  // .site-header,
+   .section, .section-heading, .why-copy, .why-grid, .steps {
     max-width: 1280px;
   }
   .hero { padding: 72px 40px 52px; grid-template-columns: minmax(0, 1fr) minmax(420px, 540px); gap: 48px; }
-  .hero h1 { font-size: 52px; }
+  .hero h1 { font-size: 4rem; }
   .hero-copy > p { font-size: 16px; }
   .section { padding: 72px 40px; }
   .section-heading h2, .offer-banner h2, .why h2 { font-size: 34px; }

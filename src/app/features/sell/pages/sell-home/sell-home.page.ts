@@ -4,6 +4,8 @@ import { CatalogService } from '../../../../core/services/catalog.service';
 import { Brand } from '../../../../core/models/catalog.models';
 import { SellQuoteModalComponent } from '../../components/sell-quote-modal/sell-quote-modal.component';
 import { environment } from 'src/environments/environment';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'rc-sell-home',
@@ -16,11 +18,12 @@ export class SellHomePage implements OnInit {
   loading = true;
   loadError = false;
   protected logoUrl: string = `assets/logo/Recello_logo.png`
+  baseUrl: string = `${environment.apiUrl}/uploads/`
   // --- UI-only state for the (static) marketing shell — no business logic here ---
   menuOpen = false;
   offerCopied = false;
 
-  constructor(private catalog: CatalogService, private modalCtrl: ModalController) {}
+  constructor(private catalog: CatalogService, private modalCtrl: ModalController, protected authService:AuthService, private router:Router) {}
 
   ngOnInit(): void {
     this.loadBrands();
@@ -54,5 +57,10 @@ export class SellHomePage implements OnInit {
     try { await navigator.clipboard?.writeText('HELLO200'); } catch { /* clipboard unavailable */ }
     this.offerCopied = true;
     setTimeout(() => { this.offerCopied = false; }, 2400);
+  }
+  myRedirect(path:string){
+    // this.router.navigate([path]);
+    window.location.href=path
+    // this.router.navigate([path])
   }
 }

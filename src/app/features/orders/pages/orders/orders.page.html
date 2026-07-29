@@ -1,0 +1,52 @@
+<ion-content [fullscreen]="true" class="rc-page">
+
+  <header class="page-header"><span class="page-title">My orders</span></header>
+
+  <div class="shell">
+
+    <div class="state-loading" *ngIf="loading">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Loading your orders…</p>
+    </div>
+
+    <div class="state-error" *ngIf="!loading && loadError">
+      <div class="state-icon">!</div>
+      <h2>Couldn't load orders</h2>
+      <p>Please check your connection or try <span class="text-primary" style="cursor: pointer;" (click)="myRedirect('/login')">logging in</span> again.</p>
+      <button class="rc-btn-primary" type="button" (click)="load()">Try again</button>
+    </div>
+
+    <div class="rc-empty" *ngIf="!loading && !loadError && !orders.length">
+      <div class="state-icon">📦</div>
+      <h2>No orders yet</h2>
+      <p>Sell your first device to see it here.</p>
+    </div>
+
+    <div class="order-list" *ngIf="!loading && !loadError && orders.length">
+      <article class="order-card" *ngFor="let o of orders">
+        <div class="order-thumb">
+          <img *ngIf="o.image_url" [src]="basePath + o.image_url" [alt]="title(o)" />
+          <span *ngIf="!o.image_url">📱</span>
+        </div>
+        <div class="order-info">
+          <div class="order-top">
+            <h3>{{ title(o) }}</h3>
+            <span class="badge" [ngClass]="status(o).cls">{{ status(o).label }}</span>
+          </div>
+          <p class="order-variant" *ngIf="o.variant">{{ o.variant }}</p>
+          <div class="order-bottom">
+            <strong>
+              <!-- {{ price(o) | inr }} -->
+              {{ price(o) | currency:'INR' }}
+
+            </strong>
+            
+            <span class="order-date" *ngIf="o.created_at">{{ o.created_at | date:'mediumDate' }}</span>
+          </div>
+        </div>
+      </article>
+    </div>
+
+  </div>
+
+</ion-content>

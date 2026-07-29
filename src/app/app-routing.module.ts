@@ -7,8 +7,31 @@ const routes: Routes = [
     path: '',
     loadChildren: () => import('./features/sell/sell.module').then(m => m.SellModule)
   },
+  {// TESTING ONLY ON PROD COMMENTED
+    path: 'login',
+    component: LoginModalComponent
+  },
   {
-    path: '',
+    path: 'account-delete',
+    loadChildren: () => import('./features/account-delete/account-delete.module').then(m => m.AccountDeleteModule)
+  },
+  {
+    path: 'account_delete',
+    redirectTo: 'account-delete',
+    pathMatch: 'full'
+  },
+  {
+    path: 'orders',
+    loadChildren: () => import('./features/orders/orders.module').then(m => m.OrdersModule)
+  },
+  
+  {
+    path: 'privacy-policy',
+    loadChildren: () => import('./features/privacy-policy/privacy-policy.module').then( m => m.PrivacyPolicyPageModule)
+  },
+  
+  {
+    path: '**',
     redirectTo: '',
     pathMatch: 'full'
   },

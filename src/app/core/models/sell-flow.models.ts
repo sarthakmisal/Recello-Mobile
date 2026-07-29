@@ -12,6 +12,12 @@ export interface AuthResponse {
   user: UserProfile;
 }
 
+/* ── Account deletion ───────────────────────────────────────── */
+export interface AccountDeleteStatus {
+  reason: string;
+  remaining_days: number;
+}
+
 /* ── Answers / price calc ───────────────────────────────────── */
 export interface QuestionAnswer {
   question_id: number;
@@ -91,4 +97,20 @@ export interface PickupRequest {
   pickup_slot_start: string;
   pickup_slot_end: string;
   notes?: string;
+}
+
+
+/* ── Orders ──────────────────────────────────────────────────── */
+export interface Order {
+  id: string;
+  brand?: string;
+  model_name?: string;
+  variant?: string;
+  image_url?: string | null;
+  status: string;
+  expected_price?: number;
+  quoted_price?: number;
+  final_price?: number;
+  created_at?: string;
+  pickup_date?: string;
 }
