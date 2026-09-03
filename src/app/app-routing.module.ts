@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { LoginModalComponent } from './core/components/login-modal/login-modal.component';
+import { FaqPage } from './features/content/faq.page';
+import { ContactUsPage } from './features/content/contact-us.page';
+import { TermsConditionsPage } from './features/content/terms-conditions.page';
 
 const routes: Routes = [
   {
@@ -24,12 +27,22 @@ const routes: Routes = [
     path: 'orders',
     loadChildren: () => import('./features/orders/orders.module').then(m => m.OrdersModule)
   },
-  
+  {
+    path: 'faq',
+    component: FaqPage
+  },
+  {
+    path: 'contact-us',
+    component: ContactUsPage
+  },
+  {
+    path: 'terms-conditions',
+    component: TermsConditionsPage
+  },
   {
     path: 'privacy-policy',
-    loadChildren: () => import('./features/privacy-policy/privacy-policy.module').then( m => m.PrivacyPolicyPageModule)
+    loadChildren: () => import('./features/privacy-policy/privacy-policy.module').then(m => m.PrivacyPolicyPageModule)
   },
-  
   {
     path: '**',
     redirectTo: '',

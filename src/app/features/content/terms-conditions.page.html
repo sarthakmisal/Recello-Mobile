@@ -1,0 +1,24 @@
+<ion-content [fullscreen]="true" class="legal-page">
+    <header class="page-header">
+        <button class="icon-btn" type="button" aria-label="Go back" (click)="goBack()">‹</button>
+        <span class="page-title">Terms & Conditions</span>
+        <span class="header-spacer" aria-hidden="true"></span>
+    </header>
+
+    <section class="legal-hero">
+        <div class="legal-hero-inner">
+            <span class="legal-eyebrow">Legal</span>
+            <h1>Terms & Conditions</h1>
+            <p>Please read these terms carefully before using our mobile buyback and selling services.</p>
+        </div>
+    </section>
+
+    <section class="legal-layout">
+        <div class="legal-content">
+            <article class="legal-section" *ngFor="let section of sections">
+                <h2>{{ section.title }}</h2>
+                <p>{{ section.body }}</p>
+            </article>
+        </div>
+    </section>
+</ion-content>

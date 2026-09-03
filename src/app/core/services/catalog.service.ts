@@ -15,7 +15,7 @@ export class CatalogService {
 
   /** GET /api/system/get_brands — public brand list (also used by admin). */
   getBrands(): Observable<Brand[]> {
-    return this.http.get<ApiBrand[]>(`${this.system}/get_brands`).pipe(
+    return this.http.get<ApiBrand[]>(`${this.system}/get_brands/sell-mobiles`).pipe(
       map((list) => list.filter((b) => b.status).map((b) => ({
         id: b.id, name: b.name, slug: b.slug, url: b.url,
         seriesCount: Number(b.series_count ?? 0)
@@ -51,5 +51,17 @@ export class CatalogService {
         } as ModelDetail;
       })
     );
+  }
+
+  /** GET /api/system/quick-sell — quick sell items for home page. */
+  async getQuickSell(): Promise<any[]> {
+    try {
+      const res = await this.http.get<any>(`${this.system}/quick-sell`).toPromise()
+      const data = Array.isArray(res) ? res : (Array.isArray(res?.data) ? res.data : [])
+      return data
+    } catch (err) {
+      console.error('Failed to load quick sell items:', err)
+      return []
+    }
   }
 }

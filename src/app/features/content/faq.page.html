@@ -1,0 +1,28 @@
+<ion-content [fullscreen]="true" class="legal-page">
+    <header class="page-header">
+        <button class="icon-btn" type="button" aria-label="Go back" (click)="goBack()">‹</button>
+        <span class="page-title">FAQs</span>
+        <span class="header-spacer" aria-hidden="true"></span>
+    </header>
+
+    <section class="legal-hero">
+        <div class="legal-hero-inner">
+            <span class="legal-eyebrow">Need help?</span>
+            <h1>Frequently asked questions</h1>
+            <p>Everything you need to know before selling your phone to Recello.</p>
+        </div>
+    </section>
+
+    <section class="faq-layout">
+        <div class="faq-list" *ngIf="!loading; else loadingTpl">
+            <details *ngFor="let item of items; let i = index" [open]="i === 0">
+                <summary>{{ item.question }} <span>+</span></summary>
+                <p>{{ item.answer }}</p>
+            </details>
+        </div>
+
+        <ng-template #loadingTpl>
+            <div class="rc-empty">Loading FAQs…</div>
+        </ng-template>
+    </section>
+</ion-content>

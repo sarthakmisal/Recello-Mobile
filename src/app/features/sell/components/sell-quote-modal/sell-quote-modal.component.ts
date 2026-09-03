@@ -34,6 +34,15 @@ interface TimeWindow {
 })
 export class SellQuoteModalComponent implements OnInit {
   @Input() initialBrandSlug?: string;
+  @Input() initialBrandId?: string | number;
+  @Input() initialBrandName?: string;
+  @Input() initialModelId?: string | number;
+  @Input() initialModelSlug?: string;
+  @Input() initialModelName?: string;
+  @Input() initialModelUrl?: string;
+
+  /** True when we jumped straight to the variant step from a quick-sell card. */
+  private quickSellMode = false;
 
   step: Step = 'brand';
   loading = false;
@@ -88,12 +97,37 @@ export class SellQuoteModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.dates = this.buildDates();
-    if (this.initialBrandSlug) {
+
+    // Quick Sell: the card already gives us the exact brand + model (slug,
+    // name, image) — skip the brand/model list screens and their API calls
+    // entirely and load storage variants straight away.
+    if (this.initialBrandSlug && this.initialModelSlug) {
+      this.quickSellMode = true;
+      this.selectedBrand = {
+        id: String(this.initialBrandId ?? ''),
+        name: this.initialBrandName ?? '',
+        slug: this.initialBrandSlug,
+        url: '',
+        seriesCount: 0
+      };
+      this.selectedModel = {
+        name: this.initialModelName ?? '',
+        slug: this.initialModelSlug,
+        url: this.initialModelUrl ?? ''
+      };
+      this.step = 'variant';
+      this.loadVariants();
+      return;
+    }
+
+    if (this.initialBrandSlug || this.initialBrandId) {
       this.loading = true;
       this.catalog.getBrands().subscribe({
         next: (list) => {
           this.brands = list;
-          const brand = list.find((b) => b.slug === this.initialBrandSlug);
+          const brand = list.find((b) =>
+            b.slug === this.initialBrandSlug || String(b.id) === String(this.initialBrandId)
+          );
           this.loading = false;
           if (brand) this.selectBrand(brand); else this.step = 'brand';
         },
@@ -116,7 +150,19 @@ export class SellQuoteModalComponent implements OnInit {
     this.errorMsg = null;
     switch (this.step) {
       case 'model': this.step = 'brand'; break;
-      case 'variant': this.step = 'model'; break;
+      case 'variant':
+        if (this.quickSellMode) {
+          // We skipped the brand/model lists on entry, so there's nothing to go
+          // "back" to yet — load them fresh so back navigation still works.
+          this.quickSellMode = false;
+          this.selectedBrand = null;
+          this.selectedModel = null;
+          this.step = 'brand';
+          this.loadBrands();
+        } else {
+          this.step = 'model';
+        }
+        break;
       case 'estimate': this.step = 'variant'; break;
       case 'questions': this.backQuestion(); break;
       case 'pickup': this.step = 'final'; break;
@@ -161,7 +207,15 @@ export class SellQuoteModalComponent implements OnInit {
     this.loading = true;
     this.errorMsg = null;
     this.catalog.getModels(this.selectedBrand.slug).subscribe({
-      next: (list) => { this.models = list; this.loading = false; },
+      next: (list) => {
+        this.models = list;
+        this.loading = false;
+        const modelId = String(this.initialModelId ?? '');
+        if (modelId) {
+          const model = list.find((m) => String((m as any).id) === modelId);
+          if (model) this.selectModel(model);
+        }
+      },
       error: () => { this.loading = false; this.errorMsg = 'Could not load models.'; }
     });
   }

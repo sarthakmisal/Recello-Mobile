@@ -5,10 +5,11 @@ import { IonicModule } from '@ionic/angular';
 import { SharedModule } from '../../shared/shared.module';
 import { SellRoutingModule } from './sell-routing.module';
 import { SellHomePage } from './pages/sell-home/sell-home.page';
+import { QuickSellPage } from './pages/quick-sell/quick-sell.page';
 import { SellQuoteModalComponent } from './components/sell-quote-modal/sell-quote-modal.component';
 
 @NgModule({
-  declarations: [SellHomePage, SellQuoteModalComponent],
+  declarations: [SellHomePage, QuickSellPage, SellQuoteModalComponent],
   imports: [CommonModule, FormsModule, IonicModule, SharedModule, SellRoutingModule]
 })
-export class SellModule {}
+export class SellModule { }

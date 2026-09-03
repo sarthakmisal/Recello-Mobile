@@ -1,0 +1,42 @@
+<ion-header translucent>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/sell-home"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Quick Sell</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <div *ngIf="loading" class="ion-padding text-center">
+        <ion-spinner></ion-spinner>
+    </div>
+
+    <div *ngIf="error" class="ion-padding">
+        <ion-card color="danger">
+            <ion-card-header>
+                <ion-card-title>Error</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>{{ error }}</ion-card-content>
+        </ion-card>
+    </div>
+
+    <div *ngIf="!loading && !error && quickSellItems.length === 0" class="ion-padding text-center">
+        <ion-text color="medium">
+            <p>No quick sell items available</p>
+        </ion-text>
+    </div>
+
+    <div *ngIf="!loading && quickSellItems.length > 0" class="quick-sell-grid ion-padding">
+        <div *ngFor="let item of quickSellItems" class="quick-sell-card" (click)="openQuickSellQuote(item)">
+            <div class="card-image">
+                <img [src]="quickSellImageUrl(item)" alt="{{ item.model_name }}" />
+            </div>
+            <div class="card-content">
+                <h3>{{ item.brand_name }}</h3>
+                <p class="model-name">{{ item.model_name }}</p>
+                <ion-button fill="solid" size="small">Get Quote</ion-button>
+            </div>
+        </div>
+    </div>
+</ion-content>

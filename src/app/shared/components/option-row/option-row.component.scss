@@ -19,6 +19,16 @@
   flex-direction: column;
   gap: 4px;
 }
+.rc-option-copy {
+  flex: 1;
+  min-width: 0;
+}
+.rc-option-copy.with-image {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+}
 .rc-option-image {
   max-height: 64px;
   max-width: 120px;

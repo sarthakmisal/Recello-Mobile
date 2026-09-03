@@ -19,7 +19,7 @@
       <h2 class="rc-title">Choose your phone brand</h2>
       <input class="rc-search" [(ngModel)]="brandQuery" placeholder="Search brand" />
       <div class="rc-option-list">
-        <rc-option-row *ngFor="let b of filteredBrands" [title]="b.name"
+        <rc-option-row *ngFor="let b of filteredBrands" [title]="b.name" [imageUrl]="b.url || null"
           [subtitle]="b.seriesCount + ' series'" (rowClick)="selectBrand(b)"></rc-option-row>
       </div>
       <div class="rc-empty" *ngIf="!loading && filteredBrands.length === 0">No brands match "{{ brandQuery }}".</div>
@@ -31,8 +31,8 @@
       <h2 class="rc-title">Select {{ selectedBrand?.name }} model</h2>
       <input class="rc-search" [(ngModel)]="modelQuery" placeholder="Search model" />
       <div class="rc-option-list">
-        <rc-option-row *ngFor="let m of filteredModels" [title]="m.name"
-          subtitle="Instant quote available" (rowClick)="selectModel(m)"></rc-option-row>
+        <rc-option-row *ngFor="let m of filteredModels" [title]="m.name" [imageUrl]="m.url || null"
+          [subtitle]="'Instant quote available'" (rowClick)="selectModel(m)"></rc-option-row>
       </div>
       <div class="rc-empty" *ngIf="!loading && filteredModels.length === 0">No models match "{{ modelQuery }}".</div>
     </ng-container>
@@ -43,8 +43,8 @@
       <h2 class="rc-title">Choose storage variant</h2>
       <p class="rc-subtle">{{ selectedModel?.name }}</p>
       <div class="rc-option-list">
-        <rc-option-row *ngFor="let v of variants" [title]="v.name"
-          subtitle="Select the exact phone storage" (rowClick)="selectVariant(v)"></rc-option-row>
+        <rc-option-row *ngFor="let v of variants" [title]="v.name" subtitle="Select the exact phone storage"
+          (rowClick)="selectVariant(v)"></rc-option-row>
       </div>
       <div class="rc-empty" *ngIf="!loading && variants.length === 0">No variants available for this model.</div>
     </ng-container>
@@ -67,12 +67,9 @@
         <span class="rc-step-label">QUESTION {{ flowPosition() }} OF {{ flowTotal() }}</span>
         <h2 class="rc-title">{{ q.question }}</h2>
         <div class="rc-option-list">
-          <rc-option-row *ngFor="let opt of q.options"
-            [title]="opt.text"
-            [imageUrl]="opt.option_image_url"
-            
-            [multi]="q.que_type === 'multi_select'"
-            [selected]="isOptionSelected(opt)" (rowClick)="chooseOption(opt)"></rc-option-row>
+          <rc-option-row *ngFor="let opt of q.options" [title]="opt.text" [imageUrl]="opt.option_image_url"
+            [multi]="q.que_type === 'multi_select'" [selected]="isOptionSelected(opt)"
+            (rowClick)="chooseOption(opt)"></rc-option-row>
         </div>
         <button class="rc-btn-primary mt" *ngIf="q.que_type === 'multi_select'"
           [disabled]="selectedOptionIds.length === 0" (click)="submitAnswer()">Continue</button>
@@ -103,9 +100,9 @@
       <h2 class="rc-title">Where should we collect it?</h2>
 
       <div class="rc-option-list" *ngIf="addresses.length">
-        <rc-option-row *ngFor="let a of addresses"
-          [title]="a.name" [subtitle]="a.line1 + ', ' + a.city + ' - ' + a.pincode"
-          [selected]="selectedAddress?.id === a.id" (rowClick)="selectAddress(a)"></rc-option-row>
+        <rc-option-row *ngFor="let a of addresses" [title]="a.name"
+          [subtitle]="a.line1 + ', ' + a.city + ' - ' + a.pincode" [selected]="selectedAddress?.id === a.id"
+          (rowClick)="selectAddress(a)"></rc-option-row>
       </div>
       <div class="rc-empty" *ngIf="!loading && addresses.length === 0">No saved addresses yet.</div>
       <button class="rc-back" (click)="openNewAddress()">+ Add a new address</button>
@@ -134,12 +131,14 @@
       <h2 class="rc-title">Add pickup address</h2>
       <div class="field-stack">
         <input class="rc-search" placeholder="Full name" [(ngModel)]="newAddress.name" />
-        <input class="rc-search" placeholder="Contact number" inputmode="numeric" maxlength="10" [(ngModel)]="newAddress.phone" />
+        <input class="rc-search" placeholder="Contact number" inputmode="numeric" maxlength="10"
+          [(ngModel)]="newAddress.phone" />
         <input class="rc-search" placeholder="Address line 1" [(ngModel)]="newAddress.line1" />
         <input class="rc-search" placeholder="Address line 2 (optional)" [(ngModel)]="newAddress.line2" />
         <input class="rc-search" placeholder="City" [(ngModel)]="newAddress.city" />
         <input class="rc-search" placeholder="State" [(ngModel)]="newAddress.state" />
-        <input class="rc-search" placeholder="Pincode" inputmode="numeric" maxlength="6" [(ngModel)]="newAddress.pincode" />
+        <input class="rc-search" placeholder="Pincode" inputmode="numeric" maxlength="6"
+          [(ngModel)]="newAddress.pincode" />
         <input class="rc-search" placeholder="Country" [(ngModel)]="newAddress.country" />
         <label class="rc-checkbox-row">
           <input type="checkbox" [(ngModel)]="newAddress.is_default" />

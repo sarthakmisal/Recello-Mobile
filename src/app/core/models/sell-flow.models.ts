@@ -104,6 +104,7 @@ export interface PickupRequest {
 export interface Order {
   id: string;
   brand?: string;
+  model?: string;
   model_name?: string;
   variant?: string;
   image_url?: string | null;
@@ -111,6 +112,8 @@ export interface Order {
   expected_price?: number;
   quoted_price?: number;
   final_price?: number;
+  base_price?: number;
   created_at?: string;
+  updated_at?: string;
   pickup_date?: string;
 }

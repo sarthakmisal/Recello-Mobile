@@ -1,11 +1,10 @@
 <button type="button" class="rc-option" [class.selected]="selected" (click)="rowClick.emit()">
-  <div *ngIf="!imageUrl">
+  <div class="rc-option-copy" [class.with-image]="!!imageUrl">
     <strong style="color: black;">{{ title }}</strong>
     <small *ngIf="subtitle">{{ subtitle }}</small>
   </div>
   <div *ngIf="imageUrl" class="rc-option-image-wrap">
     <img class="rc-option-image" [src]="basePath+imageUrl" [alt]="title" />
-    <small *ngIf="subtitle">{{ subtitle }}</small>
   </div>
   <span class="rc-chev" *ngIf="!multi">›</span>
   <span class="check" *ngIf="multi" [class.on]="selected">✓</span>

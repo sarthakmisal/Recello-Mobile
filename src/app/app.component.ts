@@ -12,8 +12,13 @@ export class AppComponent {
   constructor(private platform: Platform) {
     if (this.platform.is('capacitor')) {
       this.platform.ready().then(async () => {
-        await StatusBar.setOverlaysWebView({ overlay: false });
-        await StatusBar.setStyle({ style: Style.Dark });
+        try {
+          await StatusBar.setOverlaysWebView({ overlay: false });
+          await StatusBar.setStyle({ style: Style.Dark });
+          await StatusBar.setBackgroundColor({ color: '#0a5b42' });
+        } catch {
+          // gracefully ignore when Capacitor status-bar APIs are not available
+        }
       });
     }
   }

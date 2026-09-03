@@ -32,15 +32,17 @@
     </div>
     <a href="#sell" (click)="closeMenu()">Sell a phone <span>›</span></a>
     <a href="#how" (click)="closeMenu()">How it works <span>›</span></a>
-    <a href="#why" (click)="closeMenu()">Why Recello <span>›</span></a>
+    <!-- <a href="#why" (click)="closeMenu()">Why Recello <span>›</span></a> -->
     <a href="#reviews" (click)="closeMenu()">Customer reviews <span>›</span></a>
     <a href="#faq" (click)="closeMenu()">FAQs <span>›</span></a>
-    <a href="#privacy" (click)="myRedirect('/privacy-policy')">Privacy Policy <span>›</span></a>
-    <!-- <a href="#">sarthak{{authService.isLoggedIn()}}</a> -->
+    <a href="#" (click)="$event.preventDefault(); myRedirect('/privacy-policy')">Privacy Policy <span>›</span></a>
+    <a href="#" (click)="$event.preventDefault(); myRedirect('/terms-conditions')">Terms & Conditions <span>›</span></a>
+    <a href="#" (click)="$event.preventDefault(); myRedirect('/contact-us')">Contact us <span>›</span></a>
     @if(authService.isLoggedIn()){
-    <a href="#" (click)="myRedirect('/account_delete')">Request Delete Account <span>›</span></a>
-    <a href="#" (click)="myRedirect('/orders')">See Orders</a>
-    <a class="text-danger" href="#" (click)="authService.logout()" >Log Out</a>
+    <a href="#" (click)="$event.preventDefault(); myRedirect('/account_delete')">Request Delete Account
+      <span>›</span></a>
+    <a href="#" (click)="$event.preventDefault(); myRedirect('/orders')">See Orders</a>
+    <a class="text-danger" href="#" (click)="$event.preventDefault(); authService.logout()">Log Out</a>
     }
   </nav>
   <div class="scrim" [class.show]="menuOpen" (click)="closeMenu()"></div>
@@ -112,36 +114,26 @@
       <div><span class="section-kicker">QUICK SELL</span>
         <h2>Popular phones in Pune</h2>
       </div>
-      <button class="text-button" (click)="openQuote()">View all</button>
+      <button class="text-button" (click)="openQuickSellPage()">View all</button>
     </div>
 
     <div #phone_scroller class="phone-scroller">
-      @defer (prefetch on idle) {
-
-      <article class="phone-card">
-        <span class="popular-badge">Popular</span>
-        <div class="phone-visual iphone"><span></span><i></i><b></b></div>
-        <h3>iPhone 15</h3>
-        <p>Get up to</p><strong>₹46,500</strong>
-        <button (click)="openQuote()">Check price</button>
+      @if (quickSellItems.length > 0) {
+      <article *ngFor="let item of quickSellItems.slice(0, 3)" class="phone-card" (click)="openQuickSellQuote(item)">
+        <div class="phone-visual" [ngStyle]="{backgroundImage: 'url(' + quickSellImageUrl(item) + ')'}">
+          <span></span><i></i><b></b>
+        </div>
+        <h3>{{ item.brand_name }} {{ item.model_name }}</h3>
+        <p>Get a quote</p>
+        <!-- <strong>Online</strong> -->
+        <button>Check price</button>
       </article>
-      <article class="phone-card">
-        <div class="phone-visual galaxy"><span></span><i></i><b></b></div>
-        <h3>Galaxy S24 Ultra</h3>
-        <p>Get up to</p><strong>₹58,000</strong>
-        <button (click)="openQuote()">Check price</button>
-      </article>
-      <article class="phone-card">
-        <div class="phone-visual oneplus-phone"><span></span><i></i><b></b></div>
-        <h3>OnePlus 12</h3>
-        <p>Get up to</p><strong>₹34,000</strong>
-        <button (click)="openQuote()">Check price</button>
-      </article>
+      } @else {
+      <p class="text-center">Loading quick sell items...</p>
       }
-
     </div>
 
-    <p class="price-note">*Indicative maximum prices. Final value depends on variant and device condition.</p>
+    <p class="price-note">*Indicative prices. Final value depends on variant and device condition.</p>
   </section>
 
   <section class="offer-banner">
@@ -212,18 +204,11 @@
       <span class="rating-pill">★ 4.8</span>
     </div>
     <div class="review-scroller">
-      <article>
-        <div class="stars">★★★★★</div>
-        <p>"The quote was clear and the pickup executive paid immediately. Much smoother than I expected."</p>
-        <footer><span>AT</span>
-          <div><strong>Aditya T.</strong><small>Baner, Pune</small></div>
-        </footer>
-      </article>
-      <article>
-        <div class="stars">★★★★★</div>
-        <p>"Sold my iPhone in under one hour. The final amount matched the condition I selected online."</p>
-        <footer><span>NK</span>
-          <div><strong>Neha K.</strong><small>Wakad, Pune</small></div>
+      <article *ngFor="let review of reviews">
+        <div class="stars">{{ '★'.repeat(review.rating) }}</div>
+        <p>"{{ review.text }}"</p>
+        <footer><span>{{ review.name.slice(0, 2).toUpperCase() }}</span>
+          <div><strong>{{ review.name }}</strong><small>{{ review.city }}</small></div>
         </footer>
       </article>
     </div>
@@ -235,18 +220,9 @@
         <h2>Frequently asked questions</h2>
       </div>
     </div>
-    <details>
-      <summary>How is my phone price calculated?<span>+</span></summary>
-      <p>Your quote is based on model, storage, age, physical condition, screen, functionality, warranty and current
-        resale demand.</p>
-    </details>
-    <details>
-      <summary>Is doorstep pickup free?<span>+</span></summary>
-      <p>Yes. Recello doorstep inspection and pickup are free in currently supported Pune locations.</p>
-    </details>
-    <details>
-      <summary>When will I receive payment?<span>+</span></summary>
-      <p>Payment is initiated after the pickup expert completes device verification and you accept the final price.</p>
+    <details *ngFor="let item of faqs; let i = index" [open]="i === 0">
+      <summary>{{ item.question }}<span>+</span></summary>
+      <p>{{ item.answer }}</p>
     </details>
   </section>
 
@@ -268,7 +244,11 @@
       <span class="brand-copy"><span class="brand-name">Recello</span><span class="brand-tagline">Sell smart reuse better</span></span> -->
     </a>
     <p>Pune's customer-first platform for selling used phones.</p>
-    <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">E-waste</a><a href="#">Support</a>
+    <div class="footer-links">
+      <a href="#" (click)="$event.preventDefault(); myRedirect('/privacy-policy')">Privacy</a>
+      <a href="#" (click)="$event.preventDefault(); myRedirect('/terms-conditions')">Terms</a>
+      <a href="#" (click)="$event.preventDefault(); myRedirect('/contact-us')">Support</a>
+      <a href="#" (click)="$event.preventDefault(); myRedirect('/faq')">FAQ</a>
     </div>
     <small>© 2026 Recello. All rights reserved.</small>
   </footer>

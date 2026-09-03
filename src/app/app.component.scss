@@ -1,0 +1,9 @@
+ion-app {
+  --ion-safe-area-top: max(env(safe-area-inset-top), 20px);
+  --ion-safe-area-bottom: max(env(safe-area-inset-bottom), 0px);
+}
+
+ion-router-outlet {
+  padding-top: var(--ion-safe-area-top);
+  padding-bottom: var(--ion-safe-area-bottom);
+}

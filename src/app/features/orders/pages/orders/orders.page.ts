@@ -13,7 +13,8 @@ const STATUS_MAP: Record<string, { label: string; cls: string }> = {
   completed: { label: 'Completed', cls: 'st-done' },
   paid: { label: 'Paid', cls: 'st-done' },
   rejected: { label: 'Rejected', cls: 'st-rejected' },
-  cancelled: { label: 'Cancelled', cls: 'st-rejected' }
+  cancelled: { label: 'Cancelled', cls: 'st-rejected' },
+  new: { label: 'New', cls: 'st-pending' }
 };
 
 @Component({
@@ -36,24 +37,35 @@ export class OrdersPage implements OnInit {
     this.loading = true;
     this.loadError = false;
     this.sell.getOrders().subscribe({
-      next: (res: any) => { this.orders = res || []; this.loading = false; },
+      next: (res: any) => { this.orders = Array.isArray(res) ? res : []; this.loading = false; },
       error: () => { this.loading = false; this.loadError = true; }
     });
   }
 
   price(o: Order): number {
-    return o.final_price ?? o.quoted_price ?? o.expected_price ?? 0;
+    return Number(o.final_price ?? o.quoted_price ?? o.expected_price ?? o.base_price ?? 0);
   }
 
   status(o: Order): { label: string; cls: string } {
-    return STATUS_MAP[o.status] || { label: o.status, cls: 'st-pending' };
+    const key = String(o.status ?? '').trim().toLowerCase().replace(/\s+/g, '_');
+    return STATUS_MAP[key] || { label: key || 'Pending', cls: 'st-pending' };
   }
 
   title(o: Order): string {
-    return [o.brand, o.model_name].filter(Boolean).join(' ') || 'Device';
+    return [o.brand, o.model_name ?? o.model].filter(Boolean).join(' ') || 'Device';
+  }
+
+  subtitle(o: Order): string {
+    const bits = [o.variant, o.pickup_date ? `Pickup ${new Date(o.pickup_date).toLocaleDateString('en-IN')}` : null]
+      .filter(Boolean);
+    return bits.join(' • ') || 'Sell request';
+  }
+
+  createdOn(o: Order): string {
+    return o.created_at ? new Date(o.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Recently';
   }
 
   myRedirect(path: string) {
-    window.location.href = path
+    window.location.href = path;
   }
 }

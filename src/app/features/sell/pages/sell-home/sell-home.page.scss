@@ -123,8 +123,19 @@
 .phone-scroller::-webkit-scrollbar, .review-scroller::-webkit-scrollbar { display: none; }
 .phone-card { min-width: 160px; scroll-snap-align: start; border: 1px solid var(--rc-line, #dfe8e3); border-radius: 18px; padding: 13px; background: #fff; position: relative; }
 .popular-badge { position: absolute; left: 10px; top: 10px; background: var(--rc-yellow, #ffd335); padding: 4px 6px; border-radius: 999px; font-size: 7px; font-weight: 900; z-index: 99; }
-.phone-visual { height: 100px; margin: -2px -2px 10px; border-radius: 14px; background: linear-gradient(145deg, #eaf7f0, #f7f8f7); position: relative; display: grid; place-items: center; }
-.phone-visual::before { content: ""; width: 46px; height: 82px; border-radius: 12px; background: linear-gradient(160deg, #17455f, #5e9ab7); border: 2px solid #183038; }
+.phone-visual {
+  height: 100px;
+  margin: -2px -2px 10px;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #eaf7f0, #f7f8f7);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+// .phone-visual::before { content: ""; width: 46px; height: 82px; border-radius: 12px; background: linear-gradient(160deg, #17455f, #5e9ab7); border: 2px solid #183038; }
 .phone-visual.galaxy::before { background: linear-gradient(160deg, #4e5b52, #b8c3b7); border-radius: 8px; }
 .phone-visual.oneplus-phone::before { background: linear-gradient(160deg, #0c1519, #40545a); }
 .phone-card h3 { font-size: 13px; margin: 0 0 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -232,7 +243,7 @@
   .text-button { font-size: 12px; }
   .phone-scroller { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); overflow: visible; padding: 2px 1px; }
   .phone-card { padding: 18px; }
-  .phone-visual { height: 130px; }
+  .phone-visual { height: 130px; background-size: contain; }
   .phone-card h3 { font-size: 15px; }
   .phone-card p { font-size: 10.5px; }
   .phone-card > strong { font-size: 19px; margin: 3px 0 12px; }

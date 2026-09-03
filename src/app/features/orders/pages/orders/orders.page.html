@@ -25,7 +25,7 @@
     <div class="order-list" *ngIf="!loading && !loadError && orders.length">
       <article class="order-card" *ngFor="let o of orders">
         <div class="order-thumb">
-          <img *ngIf="o.image_url" [src]="basePath + o.image_url" [alt]="title(o)" />
+          <img style="height: 100px !important;object-fit: cover;" *ngIf="o.image_url" [src]="basePath + o.image_url" [alt]="title(o)" />
           <span *ngIf="!o.image_url">📱</span>
         </div>
         <div class="order-info">
@@ -33,15 +33,10 @@
             <h3>{{ title(o) }}</h3>
             <span class="badge" [ngClass]="status(o).cls">{{ status(o).label }}</span>
           </div>
-          <p class="order-variant" *ngIf="o.variant">{{ o.variant }}</p>
+          <p class="order-variant" *ngIf="subtitle(o)">{{ subtitle(o) }}</p>
           <div class="order-bottom">
-            <strong>
-              <!-- {{ price(o) | inr }} -->
-              {{ price(o) | currency:'INR' }}
-
-            </strong>
-            
-            <span class="order-date" *ngIf="o.created_at">{{ o.created_at | date:'mediumDate' }}</span>
+            <strong>{{ price(o) | currency:'INR' }}</strong>
+            <span class="order-date">{{ createdOn(o) }}</span>
           </div>
         </div>
       </article>

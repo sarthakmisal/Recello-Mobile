@@ -1,0 +1,27 @@
+.legal-page { --page-bg: #f5f8f6; background: var(--page-bg); }
+.page-header {
+  position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between;
+  height: 60px; padding: 0 16px; background: rgba(255,255,255,0.96); border-bottom: 1px solid var(--rc-line, #dfe8e3);
+}
+.page-title { font-size: 15px; font-weight: 800; color: var(--rc-ink, #10231c); }
+.icon-btn { width: 34px; height: 34px; border: 0; background: #f0f5f2; border-radius: 11px; font-size: 26px; color: var(--rc-ink, #10231c); }
+.header-spacer { width: 34px; }
+.legal-hero { padding: 26px 16px 0; }
+.legal-hero-inner { background: linear-gradient(145deg, var(--rc-green-950, #043c2e), var(--rc-green-800, #087a55)); border-radius: 24px; padding: 20px 18px; color: #fff; }
+.legal-eyebrow { display: inline-block; background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.12); color: #d7f8ea; font-size: 9px; letter-spacing: .14em; text-transform: uppercase; border-radius: 999px; padding: 7px 10px; }
+.legal-hero h1 { margin: 16px 0 10px; font-size: 28px; line-height: 1.1; letter-spacing: -0.9px; }
+.legal-hero p { margin: 0; color: rgba(255,255,255,0.8); font-size: 12px; line-height: 1.6; }
+.contact-layout { padding: 18px 16px 32px; }
+.contact-card { background: #fff; border: 1px solid var(--rc-line, #dfe8e3); border-radius: 20px; padding: 16px; }
+.info-row { display: grid; grid-template-columns: 32px 1fr; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--rc-line, #dfe8e3); }
+.info-row:last-child { border-bottom: none; padding-bottom: 0; }
+.info-row span { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 10px; background: var(--rc-green-50, #effbf6); font-size: 18px; }
+.info-row strong { display: block; margin-bottom: 5px; font-size: 12px; }
+.info-row p { margin: 0; color: var(--rc-muted, #65746e); font-size: 11px; line-height: 1.6; }
+@media (min-width: 700px) {
+  .legal-hero { padding: 36px 32px 0; }
+  .contact-layout { padding: 24px 32px 60px; }
+  .contact-card { max-width: 900px; margin: 0 auto; padding: 24px; }
+  .info-row strong { font-size: 14px; }
+  .info-row p { font-size: 12px; }
+}

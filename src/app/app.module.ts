@@ -9,13 +9,16 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { CoreModule } from './core/core.module';
 import { AuthService } from './core/services/auth.service';
+import { FaqPage } from './features/content/faq.page';
+import { ContactUsPage } from './features/content/contact-us.page';
+import { TermsConditionsPage } from './features/content/terms-conditions.page';
 
 export function restoreAuth(auth: AuthService): () => Promise<void> {
   return () => auth.restore();
 }
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, FaqPage, ContactUsPage, TermsConditionsPage],
   imports: [BrowserModule, IonicModule.forRoot(), HttpClientModule, CoreModule, AppRoutingModule],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
