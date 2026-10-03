@@ -80,17 +80,13 @@
     <ng-container *ngSwitchCase="'final'">
       <span class="rc-step-label">YOUR FINAL OFFER</span>
       <h2 class="rc-title">Here's what we can pay</h2>
-      <div class="rc-result-card" *ngIf="priceCalc as p">
-        <small>FINAL OFFER</small>
+      <div class="rc-offer-card" *ngIf="priceCalc as p">
+        <div class="rc-offer-badge">✓ Best price, guaranteed</div>
+        <small>YOU GET</small>
         <h3>{{ p.finalPrice | inr }}</h3>
-        <p>Base price {{ p.basePrice | inr }}</p>
+        <p>For your {{ selectedModel?.name }}{{ selectedVariant?.name ? ' · ' + selectedVariant?.name : '' }}</p>
       </div>
-      <div class="deductions" *ngIf="priceCalc?.deductions?.length">
-        <div class="rc-deduction-row" *ngFor="let d of priceCalc?.deductions">
-          <span>{{ d.label }}</span>
-          <span class="amt">-{{ d.amount | inr }}</span>
-        </div>
-      </div>
+      <p class="rc-subtle center mt">Price is inclusive of all condition checks — no surprises at pickup.</p>
       <button class="rc-btn-yellow mt" [disabled]="loading" (click)="proceedToPickup()">Schedule free pickup</button>
     </ng-container>
 

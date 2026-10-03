@@ -28,6 +28,14 @@ const routes: Routes = [
     loadChildren: () => import('./features/orders/orders.module').then(m => m.OrdersModule)
   },
   {
+    path: 'profile',
+    loadChildren: () => import('./features/profile/profile.module').then(m => m.ProfileModule)
+  },
+  {
+    path: 'about-us',
+    loadChildren: () => import('./features/about-us/about-us.module').then(m => m.AboutUsModule)
+  },
+  {
     path: 'faq',
     component: FaqPage
   },

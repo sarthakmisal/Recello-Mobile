@@ -152,6 +152,49 @@
 .rc-deduction-row:last-child { border-bottom: 0; }
 .rc-deduction-row .amt { color: #c0392b; font-weight: 700; }
 
+.rc-offer-card {
+  background: linear-gradient(155deg, var(--rc-green-950), var(--rc-green-800) 65%);
+  color: #fff;
+  border-radius: 22px;
+  padding: 26px 22px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 14px 30px rgba(8, 122, 85, 0.28);
+}
+.rc-offer-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #fff;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  padding: 5px 12px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+.rc-offer-card small {
+  display: block;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.72);
+}
+.rc-offer-card h3 {
+  font-size: 40px;
+  font-weight: 900;
+  margin: 8px 0 6px;
+  letter-spacing: -1px;
+}
+.rc-offer-card p {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0;
+}
+
 .rc-chip {
   display: inline-flex;
   align-items: center;
@@ -161,7 +204,8 @@
   padding: 9px 14px;
   font-size: 11px;
   font-weight: 700;
-  background: #fff;
+  // background: #fff;
+  background: #043c2e;
 }
 .rc-chip.selected {
   border-color: var(--rc-green-800);

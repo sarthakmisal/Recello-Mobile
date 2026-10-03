@@ -1,0 +1,171 @@
+<ion-content [fullscreen]="true" class="about-page">
+
+  <header class="page-header">
+    <button class="icon-btn" type="button" aria-label="Go back" (click)="goBack()">‹</button>
+    <span class="page-title">About Recello</span>
+    <span class="header-spacer" aria-hidden="true"></span>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content container">
+      <div class="hero-text">
+        <span class="mini-title">RECELLO • SMARTPHONE BUYBACK &amp; REFURBISHMENT</span>
+        <h1>Smart Resale.<br />Trusted Value.</h1>
+        <p>Transforming the way people sell, buy, and access refurbished smartphones in India with
+          transparency, convenience, and fairness.</p>
+      </div>
+      <div class="hero-image">
+        <span class="hero-emoji">📱</span>
+        <span class="hero-image-caption">Give your old phone a new life</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORY -->
+  <section class="story-section container">
+    <div class="story-left">
+      <span>OUR VISION</span>
+      <h2>India's most trusted <br />smartphone platform.</h2>
+    </div>
+    <div class="story-right">
+      <p>To become India's most trusted smartphone buyback and refurbishment platform by delivering
+        transparency, convenience, and value at every step of the customer journey.</p>
+    </div>
+  </section>
+
+  <!-- IMAGE STORY -->
+  <section class="image-story-section">
+    <div class="image-story-card large">
+      <div class="image-overlay">
+        <span>OUR MISSION</span>
+        <h2>Hassle-free <br />smartphone <br />resale.</h2>
+      </div>
+    </div>
+    <div class="image-story-grid">
+      <div class="image-story-card small icon-card">
+        <span class="card-emoji">♻️</span>
+      </div>
+      <div class="image-story-card small text-card">
+        <span>OUR COMMITMENT</span>
+        <h3>Building trust through honest pricing, dependable service, and smooth experience.</h3>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats-section container">
+    <div class="stat-card">
+      <h2>Founded</h2>
+      <p>By Kabier Ranveersingh Thakur, Santosh Pandit Aiwale &amp; Mohan Shankar Rathod</p>
+    </div>
+    <div class="stat-card">
+      <h2>Pune-based</h2>
+      <p>Transforming Technology Resale</p>
+    </div>
+    <div class="stat-card">
+      <h2>Mission</h2>
+      <p>Transparent &amp; Trustworthy Platform</p>
+    </div>
+  </section>
+
+  <!-- PLATFORM -->
+  <section class="platform-section">
+    <div class="container">
+      <div class="platform-heading">
+        <span>WHAT WE DO</span>
+        <h2>Complete smartphone <br />solutions for everyone.</h2>
+      </div>
+      <div class="platform-grid">
+        <div class="platform-card">
+          <div class="platform-icon">📱</div>
+          <h3>Smartphone Buyback</h3>
+          <p>Sell your old smartphone instantly with transparent pricing and instant payment.</p>
+        </div>
+        <div class="platform-card">
+          <div class="platform-icon">🌿</div>
+          <h3>Refurbished Sales</h3>
+          <p>Premium refurbished smartphones with warranty and quality assurance guaranteed.</p>
+        </div>
+        <div class="platform-card">
+          <div class="platform-icon">🛠️</div>
+          <h3>Device Evaluation</h3>
+          <p>Fair, transparent assessment of your device condition and instant value estimates.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section class="timeline-section container">
+    <div class="timeline-header">
+      <span>OUR JOURNEY</span>
+      <h2>Transforming smartphone <br />resale in India.</h2>
+    </div>
+    <div class="timeline-wrapper">
+      <div class="timeline-line"></div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <span>FOUNDED</span>
+          <h3>A Simple Mission</h3>
+          <p>Kabier Ranveersingh Thakur, Santosh Pandit Aiwale, and Mohan Shankar Rathod founded Recello to
+            make smartphone resale transparent and trustworthy.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <span>CHALLENGE</span>
+          <h3>Solving Real Problems</h3>
+          <p>Consumers faced inconsistent pricing, unexpected deductions, lengthy processes, and delayed
+            payments. Recello was created to address these challenges.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <span>2026</span>
+          <h3>Official Launch</h3>
+          <p>Redefining the smartphone resale experience for customers across India with fairness and
+            transparency.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PEOPLE -->
+  <section class="people-section container">
+    <div class="people-header">
+      <span>OUR FOUNDERS</span>
+      <h2>Passionate leaders <br />building India's future.</h2>
+    </div>
+    <div class="people-grid">
+      <div class="people-card" *ngFor="let f of founders">
+        <div class="founder-mark" aria-hidden="true"><span>{{ f.initials }}</span></div>
+        <h3>{{ f.name }}</h3>
+        <p>{{ f.role }}</p>
+        <div class="founder-note">
+          <span class="note-ic">👥</span>
+          <span>{{ f.note }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container cta-wrapper">
+      <div>
+        <span>JOIN THE RECELLO JOURNEY</span>
+        <h2>Whether you're selling your old device <br />or buying refurbished, we're here for you.</h2>
+      </div>
+      <button type="button" (click)="goBack()">Get Started <span>→</span></button>
+    </div>
+  </section>
+
+</ion-content>

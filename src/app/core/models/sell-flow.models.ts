@@ -12,6 +12,19 @@ export interface AuthResponse {
   user: UserProfile;
 }
 
+/** Full profile returned by GET /api/users/me and accepted by PUT /api/users/me. */
+export interface MyProfile {
+  id: string;
+  email?: string | null;
+  phone?: string | null;
+  status?: number;
+  is_verified?: boolean;
+  first_name?: string | null;
+  last_name?: string | null;
+  avatar_url?: string | null;
+  roles?: string[];
+}
+
 /* ── Account deletion ───────────────────────────────────────── */
 export interface AccountDeleteStatus {
   reason: string;

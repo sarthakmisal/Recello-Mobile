@@ -57,6 +57,7 @@ export class QuickSellPage implements OnInit {
                 initialModelUrl: item.model_url
             },
             breakpoints: [0, 0.92],
+            expandToScroll: false,
             initialBreakpoint: 0.92,
             handle: false
         })

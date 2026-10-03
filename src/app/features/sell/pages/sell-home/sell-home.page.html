@@ -35,12 +35,14 @@
     <!-- <a href="#why" (click)="closeMenu()">Why Recello <span>›</span></a> -->
     <a href="#reviews" (click)="closeMenu()">Customer reviews <span>›</span></a>
     <a href="#faq" (click)="closeMenu()">FAQs <span>›</span></a>
+    <a href="#" (click)="$event.preventDefault(); myRedirect('/about-us')">About Us <span>›</span></a>
     <a href="#" (click)="$event.preventDefault(); myRedirect('/privacy-policy')">Privacy Policy <span>›</span></a>
     <a href="#" (click)="$event.preventDefault(); myRedirect('/terms-conditions')">Terms & Conditions <span>›</span></a>
     <a href="#" (click)="$event.preventDefault(); myRedirect('/contact-us')">Contact us <span>›</span></a>
     @if(authService.isLoggedIn()){
     <a href="#" (click)="$event.preventDefault(); myRedirect('/account_delete')">Request Delete Account
       <span>›</span></a>
+    <a href="#" (click)="$event.preventDefault(); myRedirect('/profile')">My Profile</a>
     <a href="#" (click)="$event.preventDefault(); myRedirect('/orders')">See Orders</a>
     <a class="text-danger" href="#" (click)="$event.preventDefault(); authService.logout()">Log Out</a>
     }
