@@ -10,7 +10,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "clean": "rimraf www dist",
-    "build": "npm run clean && ionic build"
+    "build": "npm run clean && npx ionic build"
   },
   "private": true,
   "dependencies": {
