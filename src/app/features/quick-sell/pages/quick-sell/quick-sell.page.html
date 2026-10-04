@@ -1,0 +1,36 @@
+<rc-page-header title="Quick Sell"></rc-page-header>
+
+<ion-content [fullscreen]="true" class="rc-page">
+  <div class="shell">
+
+    <div class="state-loading" *ngIf="loading">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Loading quick sell picks…</p>
+    </div>
+
+    <div class="state-error" *ngIf="!loading && error">
+      <div class="state-icon warn">!</div>
+      <h2>Couldn't load this</h2>
+      <p>{{ error }}</p>
+      <button class="rc-btn-primary" type="button" (click)="loadQuickSell()">Try again</button>
+    </div>
+
+    <div class="rc-empty-state" *ngIf="!loading && !error && quickSellItems.length === 0">
+      <div class="state-icon">📱</div>
+      <h2>Nothing here yet</h2>
+      <p>Check back soon for quick sell picks.</p>
+    </div>
+
+    <div class="quick-sell-grid" *ngIf="!loading && !error && quickSellItems.length > 0">
+      <article class="quick-sell-card" *ngFor="let item of quickSellItems" (click)="openQuickSellQuote(item)">
+        <div class="card-image" [ngStyle]="{backgroundImage: 'url(' + quickSellImageUrl(item) + ')'}"></div>
+        <div class="card-content">
+          <span class="brand-name">{{ item.brand_name }}</span>
+          <h3>{{ item.model_name }}</h3>
+          <span class="get-quote">Get quote <span>→</span></span>
+        </div>
+      </article>
+    </div>
+
+  </div>
+</ion-content>

@@ -165,7 +165,6 @@ export class SellHomePage implements OnInit {
   myRedirect(path: string): void {
     this.closeMenu();
     this.router.navigateByUrl(path);
-    window.location.href = path;
   }
 
   private readonly defaultFaqs: FaqItem[] = [

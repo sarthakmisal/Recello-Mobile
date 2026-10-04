@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { SellService } from '../../../../core/services/sell.service';
 import { Order } from '../../../../core/models/sell-flow.models';
 import { environment } from 'src/environments/environment';
@@ -29,7 +31,14 @@ export class OrdersPage implements OnInit {
   orders: Order[] = [];
   protected basePath = `${environment.apiUrl}/uploads/`;
 
-  constructor(private sell: SellService, protected authService: AuthService) { }
+  constructor(
+    private sell: SellService,
+    protected authService: AuthService,
+    private router: Router,
+    private location: Location
+  ) { }
+
+  goBack(): void { this.location.back(); }
 
   ngOnInit(): void { this.load(); }
 
@@ -65,7 +74,7 @@ export class OrdersPage implements OnInit {
     return o.created_at ? new Date(o.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Recently';
   }
 
-  myRedirect(path: string) {
-    window.location.href = path;
+  myRedirect(path: string): void {
+    this.router.navigateByUrl(path);
   }
 }

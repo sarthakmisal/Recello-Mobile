@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import {
   HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest
 } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { Observable, from, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
@@ -20,7 +19,7 @@ const PUBLIC_AUTH_PATHS = [
   providedIn: 'root',
 })
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private auth: AuthService) {}
 
   intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const isOwnApi = req.url.startsWith(environment.apiUrl);
@@ -39,11 +38,18 @@ export class AuthInterceptor implements HttpInterceptor {
               // refresh + retry before giving up (covers revoked/rotated-secret edge cases).
               return from(this.auth.getValidAccessToken(true)).pipe(
                 switchMap((freshToken) => {
-                  if (!freshToken) return this.bounceToLogin(err);
+                  if (!freshToken) {
+                    // Refresh is dead too — quietly drop the stale local session so
+                    // isLoggedIn()/the UI reflect reality. We deliberately do NOT force
+                    // a navigation here: a background call failing (e.g. a profile
+                    // fetch) shouldn't hijack whatever the user is doing right now —
+                    // each page already shows its own "couldn't load" state, and any
+                    // page that truly requires a session will prompt the user itself.
+                    void this.auth.clearSessionOnly();
+                    return throwError(() => err);
+                  }
                   const retryReq = req.clone({ setHeaders: { Authorization: `Bearer ${freshToken}` } });
-                  return next.handle(retryReq).pipe(
-                    catchError((retryErr: unknown) => this.bounceToLogin(retryErr))
-                  );
+                  return next.handle(retryReq);
                 })
               );
             }
@@ -52,11 +58,5 @@ export class AuthInterceptor implements HttpInterceptor {
         );
       })
     );
-  }
-
-  /** Both the refresh token and the retry are dead — the session is genuinely over. */
-  private bounceToLogin(err: unknown): Observable<never> {
-    void this.auth.logout().then(() => this.router.navigateByUrl('/login'));
-    return throwError(() => err);
   }
 }

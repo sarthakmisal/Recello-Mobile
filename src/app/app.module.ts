@@ -8,6 +8,7 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { CoreModule } from './core/core.module';
+import { SharedModule } from './shared/shared.module';
 import { AuthService } from './core/services/auth.service';
 import { FaqPage } from './features/content/faq.page';
 import { ContactUsPage } from './features/content/contact-us.page';
@@ -19,7 +20,7 @@ export function restoreAuth(auth: AuthService): () => Promise<void> {
 
 @NgModule({
   declarations: [AppComponent, FaqPage, ContactUsPage, TermsConditionsPage],
-  imports: [BrowserModule, IonicModule.forRoot(), HttpClientModule, CoreModule, AppRoutingModule],
+  imports: [BrowserModule, IonicModule.forRoot(), HttpClientModule, CoreModule, SharedModule, AppRoutingModule],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: APP_INITIALIZER, useFactory: restoreAuth, deps: [AuthService], multi: true }

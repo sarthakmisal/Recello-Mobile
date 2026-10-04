@@ -153,6 +153,13 @@ export class AuthService {
     await this.clearLocalSession();
   }
 
+  /** Public wrapper for the interceptor: drop a session we already know is dead
+   *  server-side (refresh failed) without re-calling /logout — that call would
+   *  just fail the same way and isn't needed to reach the same end state. */
+  async clearSessionOnly(): Promise<void> {
+    await this.clearLocalSession();
+  }
+
   private async clearLocalSession(): Promise<void> {
     this.accessToken = null;
     this.accessTokenExpiresAt = null;

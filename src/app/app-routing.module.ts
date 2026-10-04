@@ -36,6 +36,10 @@ const routes: Routes = [
     loadChildren: () => import('./features/about-us/about-us.module').then(m => m.AboutUsModule)
   },
   {
+    path: 'quick-sell',
+    loadChildren: () => import('./features/quick-sell/quick-sell.module').then(m => m.QuickSellModule)
+  },
+  {
     path: 'faq',
     component: FaqPage
   },

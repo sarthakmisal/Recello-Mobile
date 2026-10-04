@@ -70,12 +70,12 @@ coverage/
 .history/
 
 # Capacitor - Android
-android/.gradle/
-android/build/
-android/app/build/
-android/local.properties
-android/keystore.properties
-android/captures/
+# android/.gradle/
+# android/build/
+# android/app/build/
+# android/local.properties
+# android/keystore.properties
+# android/captures/
 
 # Capacitor - iOS
 ios/App/build/
@@ -120,3 +120,6 @@ coverage/
 *.log
 .env
 .env.*
+
+*.zip
+.vscode/
