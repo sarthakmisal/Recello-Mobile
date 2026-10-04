@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 import { AuthService } from '../../../../core/services/auth.service';
 import { MyProfile } from '../../../../core/models/sell-flow.models';
 
@@ -40,13 +40,16 @@ export class ProfilePage implements OnInit {
 
   form = { first_name: '', last_name: '', phone: '' };
 
-  constructor(private auth: AuthService, private location: Location, private router: Router) { }
+  constructor(private auth: AuthService, private location: Location, private navCtrl: NavController) { }
 
   ngOnInit(): void { this.load(); }
 
   goBack(): void { this.location.back(); }
 
-  goTo(path: string): void { this.router.navigateByUrl(path); }
+  // NavController (not a raw Router.navigateByUrl) so Ionic's own router-outlet
+  // transition/stack handling runs properly — navigateByUrl was leaving the outlet
+  // in a blank state on some devices even though the URL itself updated correctly.
+  goTo(path: string): void { this.navCtrl.navigateForward(path); }
 
   logout(): void { this.auth.logout(); }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 import { Location } from '@angular/common';
 import { SellService } from '../../../../core/services/sell.service';
 import { Order } from '../../../../core/models/sell-flow.models';
@@ -34,7 +34,7 @@ export class OrdersPage implements OnInit {
   constructor(
     private sell: SellService,
     protected authService: AuthService,
-    private router: Router,
+    private navCtrl: NavController,
     private location: Location
   ) { }
 
@@ -75,6 +75,6 @@ export class OrdersPage implements OnInit {
   }
 
   myRedirect(path: string): void {
-    this.router.navigateByUrl(path);
+    this.navCtrl.navigateForward(path);
   }
 }

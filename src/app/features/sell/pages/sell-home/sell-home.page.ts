@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ModalController } from '@ionic/angular';
+import { ModalController, NavController } from '@ionic/angular';
 import { CatalogService } from '../../../../core/services/catalog.service';
 import { Brand } from '../../../../core/models/catalog.models';
 import { SellQuoteModalComponent } from '../../components/sell-quote-modal/sell-quote-modal.component';
 import { environment } from 'src/environments/environment';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { Router } from '@angular/router';
 
 interface FaqItem {
   question: string;
@@ -46,7 +45,7 @@ export class SellHomePage implements OnInit {
     private catalog: CatalogService,
     private modalCtrl: ModalController,
     protected authService: AuthService,
-    private router: Router,
+    private navCtrl: NavController,
     private http: HttpClient
   ) { }
 
@@ -127,7 +126,7 @@ export class SellHomePage implements OnInit {
 
   openQuickSellPage(): void {
     this.closeMenu();
-    this.router.navigateByUrl('/quick-sell');
+    this.navCtrl.navigateForward('/quick-sell');
   }
 
   async openQuickSellQuote(item: any): Promise<void> {
@@ -164,7 +163,10 @@ export class SellHomePage implements OnInit {
 
   myRedirect(path: string): void {
     this.closeMenu();
-    this.router.navigateByUrl(path);
+    // NavController (not Router.navigateByUrl) so Ionic's router-outlet transition
+    // and page stack stay in sync — this is what was causing the URL to change
+    // while the outlet itself stayed blank until a manual refresh.
+    this.navCtrl.navigateForward(path);
   }
 
   private readonly defaultFaqs: FaqItem[] = [
